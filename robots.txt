@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://bozenw.github.io/sitemap.xml
+Sitemap: https://nez0b.github.io/sitemap.xml
