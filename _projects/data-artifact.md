@@ -10,7 +10,7 @@ category: work
 
 authors:
   - name: PoJen Wang 
-    url: "https://en.wikipedia.org/wiki/Albert_Einstein"
+    url: "https://nez0b.github.io"
     affiliations:
       name: IBM Q-hub, National Taiwan University
   
