@@ -1,9 +1,14 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
-  color: "#00369f"
+"JHEP":
+  url: https://link.springer.com/journal/13130
+  color: "#efcc00"
 
-"PhysRev":
-  url: https://journals.aps.org/
+"PhysRevLett":
+  url: https://journals.aps.org/prl/
+  color: "#215d42"
+
+"JPB":
+  url: https://iopscience.iop.org/journal/0953-4075
+  color: "#0076df"
 
 "Vision":
   color: "#009f36"

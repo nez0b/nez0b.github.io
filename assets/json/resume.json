@@ -1,11 +1,10 @@
 {
   "basics": {
     "name": "PoJen Wang (王柏荏)",
-    //"label": "Scientist",
     "image": "",
     "email": "pwang529@gmail.com",
     "phone": "(510) 918-4003",
-    "url": "https://bozenw.github.io/",
+    "url": "https://nez0b.github.io/",
     "summary": "Theoretical Physicists with a diverse research interest in Particle Physics, Cosmology, Quantum Computing and Machine Learning.",
     "location": {
       "address": "2712 Broadway St",
@@ -29,7 +28,6 @@
       "url": "https://quantum.ntu.edu.tw/",
       "startDate": "2023-01",
       "endDate": "Present",
-      //"summary": "",
       "highlights": ["Studies of Learning-Based Quantum Mitigation Algorithms and Quantum Process Tomography",
       "Qubit-efficient VQE calculation on large molecules using linear-scaling DFT (BigDFT FORTRAN codes) and Daubechies wavelets for drug-design",
       "Qiskit Hackthon Taiwan 2023/2024 Organizer and Mentor"
@@ -57,18 +55,6 @@
       ]
     }
   ],
-  //"volunteer": [
-  //  {
-  //    "organization": "People's Climate March",
-  //    "location": "Zurich, Switzerland",
-  //    "position": "Lead Organizer",
-  //    "url": "https://example.com",
-  //    "startDate": "2014-04-01",
-  //    "endDate": "2015-07-01",
-  //    "summary": "Lead organizer for the New York City branch of the People's Climate March, the largest climate march in history.",
-  //    "highlights": ["Awarded 'Climate Hero' award by Greenpeace for my efforts organizing the march.", "Men of the year 2014 by Time magazine"]
-  //  }
-  //],
   "education": [
     {
       "institution": "New York University",
@@ -80,7 +66,6 @@
       "endDate": "2021-SEP",
       "score": "10",
       "courses": ["Thesis: Exceptions in Thermal Dark Matter Freeze-Out", "Advisor: Joshua Ruderman"]
-      //"courses": ["Theory of Relativity"]
     },
     {
       "institution": "University of California, Berkeley",
@@ -91,18 +76,9 @@
       "startDate": "2012-SEP",
       "endDate": "2014-May",
       "score": "10"
-      //"courses": ["Theory of Relativity"]
     }
   ],
-  //"awards": [
-  //  {
-  //    "title": "Nobel Prize in Physics",
-  //    "date": "1921-11-01",
-  //    "awarder": "Royal Swedish Academy of Sciences",
-  //    "url": "https://www.nobelprize.org/prizes/physics/1921/einstein/biographical/",
-  //    "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
-  //  }
-  //],
+  
   "certificates": [
     {
       "name": "TensorFlow Developer Certificate",
@@ -153,14 +129,12 @@
       "publisher": "Journal of High Energy Physics, 21, 103 (2021)",
       "releaseDate": "2021-06-16",
       "url": "https://link.springer.com/article/10.1007/JHEP06(2021)103"
-      //"summary": "It concerned an interpretation of the Michelson–Morley experiment and the properties of light and time. Special relativity incorporates the principle that the speed of light is the same for all inertial observers regardless of the state of motion of the source."
     },
     {
       "name": "Thermal Relic Targets with Exponentially Small Couplings",
       "publisher": "Physical Review Letters 124, no.15, 151801 (2020)",
       "releaseDate": "2020-04-17",
       "url": "https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.124.151801"
-      //"summary": "In the second paper, he applied the quantum theory to light to explain the photoelectric effect. In particular, he used the idea of light quanta (photons) to explain experimental results, but stressed the importance of the experimental results. The importance of his work on the photoelectric effect earned him the Nobel Prize in Physics in 1921."
     },
     {
       "name": "Exponentially Light Dark Matter from Coannihilation",
@@ -240,36 +214,4 @@
       "icon": ""
     }
   ]
-  //"interests": [
-  //  {
-  //    "name": "Physics",
-  //    "icon": "fa-solid fa-tag",
-  //    "keywords": [
-  //      "Quantum Mechanics",
-  //      "Quantum Computing",
-  //      "Quantum Information",
-  //      "Quantum Cryptography",
-  //      "Quantum Communication",
-  //      "Quantum Teleportation"
-  //    ]
-  //  }
-  //]
-  //"references": [
-  //  {
-  //    "name": "Professor Yuhsin Tsai",
-  //    "icon": "fa-solid fa-laptop",
-  //    "url": "https://physics.nd.edu/people/yuhsin-tsai/",
-  //    "reference": ""
-  //  }
-  //]
-  //"projects": [
-  //  {
-  //    "name": "Quantum Computing",
-  //    "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-  //    "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-  //    "startDate": "2018-01-01",
-  //    "endDate": "2018-01-01",
-  //    "url": "https://example.com"
-  //  }
-  //]
 }
