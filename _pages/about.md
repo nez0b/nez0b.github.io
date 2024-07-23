@@ -18,7 +18,9 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Postdocotral Researcher trained in Theoretical Particle Physics, with a diverse research interest in Particle Physics, Quantum Computing and Machine Learning.
+Postdocotral Researcher in Quantum Computing, with research focus on quantum noise modeling, error mitigation and algorithms.
+
+<b>Previously: </b> I received my Ph.D. in Theoretical Physics from New York University, advised by Joshua Ruderman. My PhD research focus on dark matter, collider phenomenology and particle cosmology. I obtained my Bachelor’s degree in Applied Mathematics and Physics from UC Berkeley. 
 
 
 
