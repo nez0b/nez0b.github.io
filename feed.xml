@@ -1,1 +1,231 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://nez0b.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://nez0b.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2024-08-04T14:13:44+00:00</updated><id>https://nez0b.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">Quantum Transfer Learning</title><link href="https://nez0b.github.io/blog/2023/qnn-transfer/" rel="alternate" type="text/html" title="Quantum Transfer Learning"/><published>2023-11-20T00:00:00+00:00</published><updated>2023-11-20T00:00:00+00:00</updated><id>https://nez0b.github.io/blog/2023/qnn-transfer</id><content type="html" xml:base="https://nez0b.github.io/blog/2023/qnn-transfer/"><![CDATA[<h2 id="model--quantum-transfer-learning-with-quantum-pooling-layer">Model : Quantum transfer learning with quantum pooling layer</h2> <p>The idea of <strong>transfer leanring</strong> is to feed the data through pre-trained feature extraction networks first, and train only a small size feed forward netwrok after it to fine tune the moedel with respect to a specific data set.</p> <p>Since CIFAR100 image data are too large to directly encode in quantum circuits today, we here rely on a “imagenet” pre-trained ResNet18 as feature extraction layer. The image feature is reduced to 4 dimension through this network, and encoded into a 4 qubit circuit network.</p> <p><img src="/assets/img/qnn_transfer/transfer_learning_general.png" alt="alt text"/></p> <p>We then utilize the idea of quantum pooling layer[2] to further reduce the quantum curcuit to a single qubit. A single qubit is sufficient for binary classification by chooing the eigenstate with higher probability.</p> <h2><img src="/assets/img/qnn_transfer/transfer_learning_c2qconv.png" alt="alt text"/></h2> <h2 id="code">Code</h2> <div class="jupyter-notebook" style="position: relative; width: 100%; margin: 0 auto;"> <div class="jupyter-notebook-iframe-container"> <iframe src="/assets/jupyter/qnn_transfer_learning.ipynb.html" style="position: absolute; top: 0; left: 0; border-style: none;" width="100%" height="100%" onload="this.parentElement.style.paddingBottom = (this.contentWindow.document.documentElement.scrollHeight + 10) + 'px'"></iframe> </div> </div>]]></content><author><name>PoJen Wang</name></author><category term="quantum-computing"/><category term="QML"/><category term="jupyter"/><summary type="html"><![CDATA[Quantum transfer learning with quantum pooling layer]]></summary></entry></feed>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://nez0b.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://nez0b.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2024-10-09T05:50:15+00:00</updated><id>https://nez0b.github.io/feed.xml</id><title type="html">blank</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design. </subtitle><entry><title type="html">Kmeans Clustering Algorithm with CUDA</title><link href="https://nez0b.github.io/blog/2024/Kmeans/" rel="alternate" type="text/html" title="Kmeans Clustering Algorithm with CUDA"/><published>2024-10-01T00:00:00+00:00</published><updated>2024-10-01T00:00:00+00:00</updated><id>https://nez0b.github.io/blog/2024/Kmeans</id><content type="html" xml:base="https://nez0b.github.io/blog/2024/Kmeans/"><![CDATA[<h2 id="introduction">Introduction</h2> <p>K-means <d-cite key="wiki"></d-cite>is a widely used unsupervised machine learning algorithm for clustering data points into K distinct groups based on their similarities. The algorithm aims to minimize the sum of squared distances between data points and their assigned cluster centroids. K-means has found applications in various fields, including image processing, customer segmentation, and data compression.</p> <p>In the general framework of the k-means algorithm, we are given a dataset $\mathbf{X} = (\mathbf{x_1}, \mathbf{x_2}, \dots, \mathbf{x_n})$, where each $\mathbf{x_i}$ represents a $d$-dimensional point in a vector space. The goal is to partition this dataset into $k$ distinct clusters $\mathbf{S} = {\mathbf{S_1}, \mathbf{S_2}, \dots, \mathbf{S_k}}$ such that points within each cluster are more similar to each other than to those in different clusters. This is achieved by solving the following optimization problem <d-footnote>However, solving this optimization problem exactly is NP-hard, which necessitates the use of approximation algorithms in practice. One common approximation method is Lloyd’s algorithm, developed by Stuart Lloyd in 1957. This iterative algorithm is what most people refer to when discussing k-means</d-footnote></p> <p>\(\underset{\mathbf{S}}{\text{arg min}} \sum_{i=1}^k \sum_{\mathbf{x} \in \mathbf{S_i}} ||\mathbf{x} - \mathbf{\mu_i}||^2,\) where $\mathbf{\mu_i}$ denotes the centroid of cluster $\mathbf{S_i}$.</p> <h3 id="k-means-algorithm-overview">K-means Algorithm Overview</h3> <p>The standard K-means algorithm follows these steps:</p> <ul> <li>Initialization: Randomly select K points as initial cluster centroids.</li> <li>Assignment: Assign each data point to the nearest centroid based on Euclidean distance.</li> <li>Update: Recalculate the centroids of each cluster by computing the mean of all points assigned to that cluster.</li> <li>Iteration: Repeat steps 2 and 3 until convergence or a maximum number of iterations is reached.</li> </ul> <h2 id="cuda-implementation">CUDA Implementation</h2> <h3 id="basic-cuda-implementation">Basic CUDA implementation</h3> <p>Our CUDA implementation of Kmeans algorithm follows from the the paradigm from the previous section. In the second step, “Assignment” part, we could leverage the thousands of CUDA cores to calculate the nearest center for each point simultaneously. The kernel function is outline below:</p> <figure class="highlight"><pre><code class="language-c--" data-lang="c++"><span class="n">__global__</span> <span class="kt">void</span> 
+<span class="nf">mapPointsToCenters</span><span class="p">(</span>
+    <span class="n">point</span> <span class="o">*</span><span class="n">d_Points</span><span class="p">,</span>
+    <span class="n">point</span> <span class="o">*</span><span class="n">d_Centers</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">d_Labels</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numPoints</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numCenters</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="o">+</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">numPoints</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+    <span class="kt">float</span> <span class="n">min_dist</span> <span class="o">=</span> <span class="n">FLT_MAX</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">min_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">numCenters</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">float</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">distance</span><span class="p">(</span><span class="n">d_Points</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">d_Centers</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="n">min_dist</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">min_idx</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+            <span class="n">min_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">d_Labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_idx</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure> <p>Next, we reset the centroids to zero in preparation for recalculating them in the following step. Each point is then assigned to its nearest centroid. Afterward, we implement a kernel to sum all points sharing the same label and record the number of points assigned to each label in the variable <em>d_ClusterCounts</em>. Finally, we divide the cumulative sum of vectors for each label by <em>d_ClusterCounts</em> to compute the new centroids.</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="rouge-code"><pre><span class="n">__global__</span> <span class="kt">void</span> 
+<span class="nf">accumulateCenters</span><span class="p">(</span>
+    <span class="n">point</span> <span class="o">*</span><span class="n">d_Points</span><span class="p">,</span>
+    <span class="n">point</span> <span class="o">*</span><span class="n">d_Centers</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">d_ClusterCounts</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">d_Labels</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numPoints</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numCenters</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="o">+</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">numPoints</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="kt">int</span> <span class="n">clusterid</span> <span class="o">=</span> <span class="n">d_Labels</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">dim</span> <span class="o">=</span> <span class="n">d_Points</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">dim</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> 
+		<span class="n">atomicAdd</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_Centers</span><span class="p">[</span><span class="n">clusterid</span><span class="p">].</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">d_Points</span><span class="p">[</span><span class="n">idx</span><span class="p">].</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="n">atomicAdd</span><span class="p">(</span><span class="o">&amp;</span><span class="n">d_ClusterCounts</span><span class="p">[</span><span class="n">clusterid</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">__global__</span> <span class="kt">void</span> 
+<span class="nf">updateCenters</span><span class="p">(</span>
+    <span class="n">point</span> <span class="o">*</span><span class="n">d_Centers</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">d_ClusterCounts</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numCenters</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="o">+</span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">numCenters</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="n">d_Centers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">/=</span> <span class="n">d_ClusterCounts</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div> <h3 id="cuda-shared-memory">CUDA shared memory</h3> <p>In the previous basic CUDA implementation, all the variables are stored and accessed from GPU’s global memory. We could improve our implementation by using GPU’s shared memory. CUDA’s shared memory is a special type of on-chip memory that allows threads within the same block to share data and communicate efficiently. It is much faster than global memory (which resides off-chip) but is limited in size (typically around 48 KB per block). Shared memory is accessible to all threads within a block, and it provides a mechanism for threads to collaborate by reading and writing to a common memory space, enabling data reuse and reducing the need for costly global memory access.</p> <p>In the second step, where we map each point to its nearest centroid, we could leverage the shared memory and stored the coordinate of the centroids in the shared memory so that it could be accessed much faster. Below is my implementation:</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+</pre></td><td class="rouge-code"><pre><span class="n">__global__</span> <span class="kt">void</span> <span class="nf">mapPointsToCenters_shmem</span><span class="p">(</span>
+<span class="kt">int</span> <span class="n">DIM</span><span class="p">,</span>
+    <span class="kt">double</span><span class="o">*</span> <span class="n">d_Points</span><span class="p">,</span>
+    <span class="kt">double</span><span class="o">*</span> <span class="n">d_Centers</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">d_Labels</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numPoints</span><span class="p">,</span>
+    <span class="kt">int</span> <span class="n">numCenters</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">shmemSize</span> <span class="o">=</span> <span class="n">DIM</span> <span class="o">*</span> <span class="n">numCenters</span><span class="p">;</span>
+    <span class="c1">//----------LOAD CENTROIDS TO SHARED MEMORY ----------------------------</span>
+    <span class="k">extern</span> <span class="n">__shared__</span> <span class="kt">double</span> <span class="n">d_Centers_shmem</span><span class="p">[];</span>
+    <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">numPoints</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+    <span class="c1">// Load centers into shared memory for each block</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">shmemSize</span><span class="p">;</span> <span class="n">i</span> <span class="o">+=</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">d_Centers_shmem</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">d_Centers</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>  <span class="c1">// Copy from global memory to shared memory</span>
+    <span class="p">}</span>
+    <span class="c1">//----------LOAD CENTROIDS TO SHARED MEMORY ----------------------------</span>
+    <span class="n">__syncthreads</span><span class="p">();</span> <span class="c1">// Ensure all centers are loaded before proceeding</span>
+
+    <span class="c1">// Find nearest center</span>
+    <span class="kt">double</span> <span class="n">min_dist</span> <span class="o">=</span> <span class="n">DBL_MAX</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">min_idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numCenters</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kt">double</span> <span class="n">dist</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">DIM</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kt">double</span> <span class="n">diff</span> <span class="o">=</span> <span class="n">d_Points</span><span class="p">[</span><span class="n">idx</span> <span class="o">*</span> <span class="n">DIM</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">d_Centers_shmem</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">DIM</span> <span class="o">+</span> <span class="n">j</span><span class="p">];</span>
+            <span class="n">dist</span> <span class="o">+=</span> <span class="n">diff</span> <span class="o">*</span> <span class="n">diff</span><span class="p">;</span>
+        <span class="p">}</span>
+	<span class="n">dist</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">dist</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">dist</span> <span class="o">&lt;</span> <span class="n">min_dist</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">min_dist</span> <span class="o">=</span> <span class="n">dist</span><span class="p">;</span>
+            <span class="n">min_idx</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">d_Labels</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_idx</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div> <h3 id="cuda-thrust">CUDA Thrust</h3> <p>The CUDA Thrust library is a high-level, C++-based parallel programming library designed to simplify GPU programming using NVIDIA’s CUDA architecture. It provides a set of STL (Standard Template Library)-like data structures and algorithms optimized for parallel execution on CUDA-enabled devices. Thrust abstracts the complexities of CUDA, allowing developers to write efficient parallel code with minimal knowledge of low-level CUDA programming. Below we highlight the key points.</p> <h4 id="calculate-distance-between-d-dimensional-vectors">Calculate distance between d-dimensional vectors</h4> <p>Given two d-dimension vectors, we could use the Thrust API to calcualte their euclidean distance as:</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+</pre></td><td class="rouge-code"><pre><span class="kt">double</span> <span class="nf">distance</span><span class="p">(</span><span class="k">const</span> <span class="n">thrust</span><span class="o">::</span><span class="n">device_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">centers</span><span class="p">,</span> 
+                <span class="k">const</span> <span class="n">thrust</span><span class="o">::</span><span class="n">device_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&amp;</span> <span class="n">old_centers</span><span class="p">,</span> 
+                <span class="kt">int</span> <span class="n">DIM</span><span class="p">,</span> 
+                <span class="kt">int</span> <span class="n">numCenters</span><span class="p">,</span> 
+                <span class="n">thrust</span><span class="o">::</span><span class="n">device_vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">d_center_idx</span><span class="p">,</span>
+                <span class="n">thrust</span><span class="o">::</span><span class="n">device_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">squared_diffs</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">thrust</span><span class="o">::</span><span class="n">device_vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">squared_diff_centers</span><span class="p">(</span><span class="n">numCenters</span><span class="p">);</span>
+    
+    <span class="n">thrust</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">thrust</span><span class="o">::</span><span class="n">device</span><span class="p">,</span>
+        <span class="n">centers</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">centers</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+        <span class="n">old_centers</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+        <span class="n">squared_diffs</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+        <span class="n">thrust</span><span class="o">::</span><span class="n">minus</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="p">);</span>
+    <span class="n">thrust</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">thrust</span><span class="o">::</span><span class="n">device</span><span class="p">,</span>
+        <span class="n">squared_diffs</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">squared_diffs</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+        <span class="n">squared_diffs</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+        <span class="n">thrust</span><span class="o">::</span><span class="n">square</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="p">);</span>
+
+    <span class="n">thrust</span><span class="o">::</span><span class="n">reduce_by_key</span><span class="p">(</span>
+        <span class="n">d_center_idx</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">d_center_idx</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+        <span class="n">squared_diffs</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+        <span class="n">thrust</span><span class="o">::</span><span class="n">make_discard_iterator</span><span class="p">(),</span>
+        <span class="n">squared_diff_centers</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+        <span class="n">thrust</span><span class="o">::</span><span class="n">equal_to</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(),</span>
+        <span class="n">thrust</span><span class="o">::</span><span class="n">plus</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">()</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div> <p>The <em>d_center_idx</em> give all the coordinates of a vector the same label so that they are be grouped together in the reduction step.</p> <h4 id="map-points-to-centers-step">Map points to centers step</h4> <p>To find the accumulate sum of points with the same label, for each point with a different centroid label, we give each coordinate of the vector a different, so that we have $\text{number of clusters} \times \text{dimension}$ labels. Suppose point $a_1,\; a_2$ are assigned to centroid 1 and 2 respectively, then we label each coordinate as follows:</p> \[\mathbf{a}_1 = \begin{pmatrix} a_{11} \\ a_{12} \\ \vdots \\ a_{1d} \end{pmatrix} \Rightarrow \begin{pmatrix} \text{label 1}\\ \text{label 2}\\ \vdots \\ \text{label d}\\ \end{pmatrix} ,\hspace{5pt} \mathbf{a}_2 = \begin{pmatrix} a_{21} \\ a_{22} \\ \vdots \\ a_{2d} \end{pmatrix} \Rightarrow \begin{pmatrix} \text{label d+1}\\ \text{label d+2}\\ \vdots \\ \text{label 2d}\\ \end{pmatrix} ,\hspace{5pt}\cdots\] <p>With this, we then use <code class="language-plaintext highlighter-rouge">thrust::stable_sort_by_key</code> to sort the input dataset array of size <code class="language-plaintext highlighter-rouge">(number of points*dimension)</code> by the above labels, then use the labels as key and use <code class="language-plaintext highlighter-rouge">thrust::reduce_by_key</code> to accumulate points with the same labels.</p> <h4 id="calculate-number-of-points-in-each-centroid">Calculate number of points in each centroid</h4> <p>After each point is assigned to its nearest centeroid, the number of points in each centroid can be found by</p> <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="n">thrust</span><span class="o">::</span><span class="n">reduce_by_key</span><span class="p">(</span>
+        <span class="n">d_labels</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">d_labels</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> 
+        <span class="n">thrust</span><span class="o">::</span><span class="n">constant_iterator</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> 
+        <span class="n">thrust</span><span class="o">::</span><span class="n">make_discard_iterator</span><span class="p">(),</span> 
+        <span class="n">d_ClusterCounts</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span>
+    <span class="p">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div> <h2 id="comparison-between-different-implementations">Comparison between different implementations</h2> <p>We ran the kmeans algorithm on our CPU (serial), basic CUDA, CUDA shared memory and Thrust implementations. For each implementation, we timed and profiled the execution on three different input sets: (1) \texttt{random-n2048-d16-c16.txt} has 2048 points and each point is of dimension 16. (2) \texttt{random-n16384-d24-c16.txt} has 16384 points and each point is of dimension 24. (3) \texttt{random-n65536-d32-c16.txt} has 65536 points and each point is of dimension 32.</p> <p><a id="fig:device1"></a> <img src="/assets/img/kmeans/device1.png" alt="Alt text" width="700"/></p> <p>The experiments were conducted on a machine with an AMD Ryzen 5600G CPU (6 cores/12 threads), running Ubuntu 22.04. The GPU used was an Nvidia GTX 1080Ti with 11 GB memory, featuring 3584 CUDA cores, 28 streaming multiprocessors (SMs), and an L1 cache size of 48 KB per SM <d-cite key="gpu"></d-cite>. The CUDA driver version was 545.84, and the CUDA toolkit version was 12.3. Among the implementations, the shared-memory CUDA implementation was the fastest, as expected. This is because using shared memory made the mapPointsToCenters step more efficient. The Nvidia 1080Ti GPU has a maximum of 2048 threads per SM, and with 28 SMs, the maximum number of threads in flight is 57344. This should theoretically represent the maximum speed-up. However, due to variations in the parallelizability of different steps in the k-means algorithm, the actual maximum performance depends on the input size and dimension. From <a href="#fig:speedup">Figure.2 </a>, the maximum speed-up of approximately 5500 was achieved with the shared memory CUDA implementation on the n65536-d32 dataset, which is about one-tenth of the theoretical estimate. The slowest implementation was the Thrust version, which was slower than both the shared-memory and basic CUDA implementations across all input datasets. However, the performance gap between the Thrust and basic CUDA implementations narrowed as input size increased, and for the n65536-d32 dataset, their performance was nearly comparable. It is expected that for larger datasets, the Thrust implementation may outperform the basic CUDA implementation since the distance calculation in the basic version uses a for-loop, while the Thrust implementation is optimized for any dimensionality and is more efficient.</p> <p><a id="fig:speedup"></a> <img src="/assets/img/kmeans/speedup.png" alt="Alt text" width="700"/></p> <hr/>]]></content><author><name>PoJen Wang</name></author><category term="parallel-computing"/><category term="ML"/><summary type="html"><![CDATA[Kmeans Clustering Algorithm with CUDA and CUDA Thrust API]]></summary></entry><entry><title type="html">Quantum Transfer Learning</title><link href="https://nez0b.github.io/blog/2023/qnn-transfer/" rel="alternate" type="text/html" title="Quantum Transfer Learning"/><published>2023-11-20T00:00:00+00:00</published><updated>2023-11-20T00:00:00+00:00</updated><id>https://nez0b.github.io/blog/2023/qnn-transfer</id><content type="html" xml:base="https://nez0b.github.io/blog/2023/qnn-transfer/"><![CDATA[<h2 id="model--quantum-transfer-learning-with-quantum-pooling-layer">Model : Quantum transfer learning with quantum pooling layer</h2> <p>The idea of <strong>transfer leanring</strong> is to feed the data through pre-trained feature extraction networks first, and train only a small size feed forward netwrok after it to fine tune the moedel with respect to a specific data set.</p> <p>Since CIFAR100 image data are too large to directly encode in quantum circuits today, we here rely on a “imagenet” pre-trained ResNet18 as feature extraction layer. The image feature is reduced to 4 dimension through this network, and encoded into a 4 qubit circuit network.</p> <p><img src="/assets/img/qnn_transfer/transfer_learning_general.png" alt="alt text"/></p> <p>We then utilize the idea of quantum pooling layer[2] to further reduce the quantum curcuit to a single qubit. A single qubit is sufficient for binary classification by chooing the eigenstate with higher probability.</p> <h2><img src="/assets/img/qnn_transfer/transfer_learning_c2qconv.png" alt="alt text"/></h2> <h2 id="code">Code</h2> <div class="jupyter-notebook" style="position: relative; width: 100%; margin: 0 auto;"> <div class="jupyter-notebook-iframe-container"> <iframe src="/assets/jupyter/qnn_transfer_learning.ipynb.html" style="position: absolute; top: 0; left: 0; border-style: none;" width="100%" height="100%" onload="this.parentElement.style.paddingBottom = (this.contentWindow.document.documentElement.scrollHeight + 10) + 'px'"></iframe> </div> </div>]]></content><author><name>PoJen Wang</name></author><category term="quantum-computing"/><category term="QML"/><category term="jupyter"/><summary type="html"><![CDATA[Quantum transfer learning with quantum pooling layer]]></summary></entry></feed>
