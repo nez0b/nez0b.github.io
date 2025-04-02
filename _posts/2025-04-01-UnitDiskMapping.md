@@ -115,6 +115,10 @@ The UDM construction involves:
 3.  Modifying crossing gadgets ("crossing-with-edge" or weighted crossing gadgets) at points corresponding to non-zero $J_{ij}$ or $h_i$ terms in the original problem. These modifications adjust local node weights within the UDG.
 4.  Carefully choosing the weights such that the MWIS of the final UDG corresponds to the ground state configuration of the original QUBO/Ising problem. The independent set constraint enforced by the Rydberg blockade naturally prevents conflicting assignments within the gadgets.
 
+A pictorial description of the graph construction is shown in Fig. 7 of the original paper:
+
+<img src="https://journals.aps.org/prxquantum/article/10.1103/PRXQuantum.4.010316/figures/7/large" alt="Image" style="width: 60%; display: block; margin: auto;">
+
 This mapping allows us to leverage the native UDG constraints of neutral atom hardware to solve arbitrarily connected problems. The following sections detail how to perform this mapping using the `qamomile` library and simulate the solution using quantum simulators like [`bloqade-analog`](https://github.com/QuEraComputing/bloqade-analog) and [`pulser`](https://pulser.readthedocs.io/en/stable/).
 
 
