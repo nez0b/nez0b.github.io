@@ -124,6 +124,8 @@ This mapping allows us to leverage the native UDG constraints of neutral atom ha
 
 ## Unit-Disk Mapping with qamomile
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/1DUQwOTfUbA5IjAknla4fLkFe_qkB8k0x)
+
 ### Overview
 
 The `qamomile` library provides tools to facilitate the Unit-Disk Mapping process. Specifically, the `qamomile.core` and `qamomile.udm` modules contain classes and functions to represent Ising models, perform the mapping to a Unit-Disk Graph, and solve the resulting MWIS problem.

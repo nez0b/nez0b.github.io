@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 group :jekyll_plugins do
+    gem 'observer'
+    gem 'logger'  # optional, silences warning
     gem 'classifier-reborn'
     gem 'jekyll'
     gem 'jekyll-archives'
