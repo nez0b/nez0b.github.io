@@ -102,7 +102,7 @@ The *AddOneSent* method adopts a simpler approach compared to *AddSent* for gene
 
 ### Error Analysis
 
-We analyze the performance of the pre-trained ELECTRA-small model on the Stanford Question Answering Dataset (SQuAD) with two different types of adversarial examples, *AddSent* and *AddOneSent*. The Code is developed based on the Course starting code, and make use of the Huggingface Transformer and Dataset module. The *AddSent* and *AddOneSent* are retrieved from the Huggingface Dataset Hub.<d-footnote>[https://huggingface.co/datasets/squad_adversarial](https://huggingface.co/datasets/squad_adversarial)</d-footnote>
+We analyze the performance of the pre-trained ELECTRA-small model on the Stanford Question Answering Dataset (SQuAD) with two different types of adversarial examples, *AddSent* and *AddOneSent*. The Code is developed based on the Course starting code, and make use of the Huggingface Transformer and Dataset module. The *AddSent* and *AddOneSent* are retrieved from the Huggingface Dataset Hub.<d-footnote>[https://huggingface.co/datasets/stanfordnlp/squad_adversarial](https://huggingface.co/datasets/stanfordnlp/squad_adversarial)</d-footnote>
 
 #### Result
 The baseline model, ELECTRA-small model, trained on the full SQuAD ver 1.1 train dataset achieves a exact match score of $78.17$ and F1-score of $85.94$ on the validation dataset. However, when evaluating on the adversarial test set, the score went down to an exact match score of $62.28$ and F1-score of $69.34$ for the *AddOneSent* set and exact match score of $53.14$ and F1-score of $59.96$ for the *AddSent* set. The result is summarized in [Table1](#tab:baseline)
