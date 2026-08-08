@@ -1,4 +1,10 @@
-# al-folio
+# nez0b.github.io
+
+PoJen Wang's academic site and research blog, built from a customized al-folio
+snapshot. See [DEVELOPMENT.md](DEVELOPMENT.md) for the supported local Ruby setup,
+build instructions, and the boundary around a future al-folio v1 migration.
+
+## Upstream theme reference
 
 <div align="center">
 
