@@ -1,0 +1,18 @@
+{% assign current_part = page.series_part | default: 0 %}
+<nav class="nac-series-nav" aria-label="Neutral-atom pulse control series navigation">
+  <div class="nac-draft"><strong>Draft series</strong> · figures and conclusions are under review</div>
+  <div class="nac-series-kicker">Neutral-atom pulse control · Part {{ current_part }} of 5</div>
+  <div class="nac-series-links">
+    {% if page.series_previous_url %}
+      <a href="{{ page.series_previous_url | relative_url }}">← {{ page.series_previous_label }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    <a href="{{ '/projects/neutral-atom-control/' | relative_url }}">Series index</a>
+    {% if page.series_next_url %}
+      <a href="{{ page.series_next_url | relative_url }}">{{ page.series_next_label }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </div>
+</nav>

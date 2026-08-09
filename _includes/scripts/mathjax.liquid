@@ -5,6 +5,10 @@
       window.MathJax = {
         tex: {
           tags: 'ams',
+          {% if page.series == 'neutral-atom-control' %}
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['\\[', '\\]'], ['$$', '$$']],
+          {% endif %}
         },
       };
     </script>

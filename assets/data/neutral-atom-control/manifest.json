@@ -1,0 +1,71 @@
+{
+  "series": "Neutral-atom quantum control",
+  "generated_from": "saved two-qubit control experiment results",
+  "policy": "Plots are regenerated from saved numerical artifacts; optimizers are not rerun.",
+  "artifacts": [
+    { "file": "g1_baselines.json", "source_experiment": "analytic CZ and finite-blockade baselines", "units": "rad/us, us, um", "transformation": "verbatim copy" },
+    { "file": "g2_pulses.json", "source_experiment": "GRAPE, Krotov, and CRAB pulse search", "units": "rad/us, us", "transformation": "verbatim copy" },
+    { "file": "g3_collocation.json", "source_experiment": "constrained direct collocation", "units": "rad/us, us", "transformation": "verbatim copy" },
+    { "file": "g4_piccolo_bell.json", "source_experiment": "Piccolo trajectory study", "units": "rad/us, us", "transformation": "copied with internal experiment label rewritten descriptively" },
+    { "file": "g5_noise.json", "source_experiment": "noise and robustness comparison", "units": "rad/us, us", "transformation": "copied with collocation pulse labels rewritten descriptively" },
+    {
+      "file": "g6_bridge.json",
+      "source_experiment": "Pulser hardware bridge",
+      "units": "fidelity",
+      "transformation": "device-layout name removed; geometry and fidelity results retained"
+    },
+    {
+      "file": "g6_bell_seq_r5p0.json",
+      "source_experiment": "Pulser hardware bridge",
+      "units": "rad/us, ns, um",
+      "transformation": "verbatim Pulser abstract representation"
+    },
+    {
+      "file": "g6_bell_seq_r6p5.json",
+      "source_experiment": "Pulser hardware bridge",
+      "units": "rad/us, ns, um",
+      "transformation": "verbatim Pulser abstract representation"
+    },
+    {
+      "file": "g6_delivered_waveforms.json",
+      "source_experiment": "Pulser hardware bridge",
+      "units": "rad/us, ns",
+      "transformation": "derived with Pulser sample(sequence, modulation=false/true); 1 ns sample period"
+    },
+    {
+      "file": "g7_qpu_runplan_sanitized.json",
+      "source_experiment": "realistic-noise candidate and anonymized run plan",
+      "units": "rad/us, us, um",
+      "transformation": "job IDs, team/account metadata, layout identifiers, and submission recipe removed; shot totals aggregated"
+    },
+    {
+      "file": "jp_figshare_cz.json",
+      "source": "Jandura-Pupillo Figshare dataset 19658427: 01_cz.csv and 12_cz_robust_B.csv",
+      "units": "t*Omega_max, |Omega|/Omega_max, phase in rad",
+      "fidelity_definition": "independent F_tr coset score on the computational block",
+      "transformation": "blank terminal delimiter row removed; only the two cited pulses and their independent scores retained",
+      "sha256": "849e1bbc6bde0204208ff6f6fb530d1401b9f9253e267de15ac955341d9b8dc7"
+    },
+    {
+      "file": "pulse_smoothness_audit.json",
+      "source": "saved pulse-search arrays and sanitized Jandura-Pupillo 01_cz",
+      "units": "dimensionless normalized quadrature variation",
+      "fidelity_definition": "not applicable",
+      "transformation": "sum_k(|Delta Omega_x|+|Delta Omega_y|)/Omega_max; no smoothing or resampling",
+      "sha256": "6e41d53de2472faf117f5d52b23db054a6ab1d6c106656a05c8c8f9f0366bf51"
+    },
+    {
+      "file": "g5_leakage_aware_scores.json",
+      "source": "saved coherent, collocation, open-system, and robust-control arrays",
+      "units": "rad/us, us, dimensionless fidelity",
+      "fidelity_definition": "F_avg_uncond=(4 F_pro+s)/5 with s=Tr[P E(P)]/4",
+      "transformation": "independent piecewise-constant Lindblad and coherent propagation; no optimization",
+      "sha256": "0103ec1ba15512be09c77aa28e6a3bb2050b31e16fab4fdefd2590c306f031e1"
+    }
+  ],
+  "fidelity_notes": {
+    "coherent_gate_studies": "Squared trace overlap with optimization over the local phase-equivalent CZ coset unless otherwise stated.",
+    "open_system_study": "Corrected unconditional average fidelity F_avg=(4 F_pro+s)/5 with leakage survival s. The earlier (4 F_pro+1)/5 value is retained separately for provenance.",
+    "hardware_bridge": "Bell-state population/fidelity, not CZ process fidelity."
+  }
+}

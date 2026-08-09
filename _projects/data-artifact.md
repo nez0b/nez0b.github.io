@@ -7,6 +7,7 @@ giscus_comments: false
 img: assets/img/dataset-artifact.png
 importance: 1
 category: work
+show_on_projects: false
 
 authors:
   - name: PoJen Wang 

@@ -1,0 +1,18 @@
+{% assign current_part = page.series_part | default: 0 %}
+<nav class="mb-4 p-3 border rounded" aria-label="Quantum simulation techniques series navigation">
+  <div><strong>Draft series</strong> · prose, figures, and benchmark interpretation are under review</div>
+  <div class="small text-muted mb-2">Quantum Simulation Techniques · Part {{ current_part }}</div>
+  <div class="d-flex justify-content-between flex-wrap gap-2">
+    {% if page.series_previous_url %}
+      <a href="{{ page.series_previous_url | relative_url }}">← {{ page.series_previous_label }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    <a href="{{ '/projects/quantum-simulation/' | relative_url }}">Series index</a>
+    {% if page.series_next_url %}
+      <a href="{{ page.series_next_url | relative_url }}">{{ page.series_next_label }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </div>
+</nav>

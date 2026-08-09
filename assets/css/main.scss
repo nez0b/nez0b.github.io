@@ -23,3 +23,98 @@ $max-content-width: {{ site.max_width }};
   "tabler-icons/tabler-icons-filled.scss",
   "tabler-icons/tabler-icons-outline.scss"
 ;
+
+/* Neutral-atom optimal-control project series. */
+.series-neutral-atom-control .nac-series-nav {
+  margin: 1.5rem 0 2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.5rem;
+  background: var(--global-card-bg-color);
+}
+.series-neutral-atom-control .nac-draft { color: #d55e00; font-size: 0.85rem; margin-bottom: 0.35rem; }
+.series-neutral-atom-control .nac-series-kicker { color: var(--global-text-color-light); font-size: 0.9rem; }
+.series-neutral-atom-control .nac-series-links {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.75rem;
+  margin-top: 0.8rem;
+  align-items: center;
+}
+.series-neutral-atom-control .nac-series-links :last-child { text-align: right; }
+.series-neutral-atom-control .nac-callout,
+.series-neutral-atom-control .nac-lab-note { padding: 0.8rem 1rem; margin: 1.2rem 0; }
+.series-neutral-atom-control .nac-callout { border-left: 4px solid #0072b2; background: rgba(0, 114, 178, 0.08); }
+.series-neutral-atom-control .nac-lab-note { border-left: 4px solid #e69f00; background: rgba(230, 159, 0, 0.09); }
+.series-neutral-atom-control .nac-chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+.series-neutral-atom-control .nac-chapter-card {
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background: var(--global-card-bg-color);
+}
+.series-neutral-atom-control .nac-chapter-card h3 { margin-top: 0; }
+.series-neutral-atom-control .nac-metric-table { width: 100%; font-size: 0.92rem; }
+.series-neutral-atom-control .nac-metric-table th,
+.series-neutral-atom-control .nac-metric-table td { padding: 0.45rem; }
+
+.series-neutral-atom-control d-article {
+  overflow-wrap: anywhere;
+}
+.series-neutral-atom-control d-article table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  white-space: normal;
+}
+.series-neutral-atom-control d-article d-math[block],
+.series-neutral-atom-control d-article .katex-display,
+.series-neutral-atom-control d-article mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+.series-neutral-atom-control d-article figure {
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.series-neutral-atom-control d-article figure picture,
+.series-neutral-atom-control d-article figure img {
+  display: block;
+  max-width: 100%;
+}
+.series-neutral-atom-control d-article figure img {
+  height: auto;
+  background: #fff;
+}
+.series-neutral-atom-control d-article figcaption.caption {
+  max-width: 78ch;
+  margin: 0.55rem auto 1.4rem;
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+@media (max-width: 575px) {
+  .series-neutral-atom-control .nac-series-links { grid-template-columns: 1fr; }
+  .series-neutral-atom-control .nac-series-links :last-child { text-align: left; }
+  .series-neutral-atom-control d-article table { font-size: 0.82rem; }
+  .series-neutral-atom-control d-article figcaption.caption { font-size: 0.82rem; }
+  .series-neutral-atom-control d-article figure picture:has(img[src*="/neutral-atom-control/part"]) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .series-neutral-atom-control d-article figure img[src*="/neutral-atom-control/part"] {
+    width: 680px !important;
+    max-width: none;
+  }
+}

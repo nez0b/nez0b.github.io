@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "source": "G6_hardware_bridge",
+    "device": "AnalogDevice",
+    "C6_rad_per_us_um6": 865723.02
+  },
+  "bell_bridge": {
+    "5.0": {
+      "F_coherent_export": 1.0,
+      "F_sequence_nominal": 0.9999801871132497,
+      "F_sequence_modulated": 0.9999152915647717,
+      "artifact_file": "g6_bell_seq_r5p0.json"
+    },
+    "6.5": {
+      "F_coherent_export": 1.0,
+      "F_sequence_nominal": 0.9999669385094021,
+      "F_sequence_modulated": 0.999058226218683,
+      "artifact_file": "g6_bell_seq_r6p5.json"
+    }
+  },
+  "qpu_reality_notes": [
+    "the calibrated hardware layout includes 5.0 um but not 6.5 um pair spacing",
+    "re-optimize at a realizable spacing before hardware execution",
+    "the effective three-level CZ is not directly represented by the analog two-level interface"
+  ]
+}

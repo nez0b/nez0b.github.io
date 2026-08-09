@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "rust_single_gate": {
+    "description": "Criterion benchmark of one Hadamard gate applied to a statevector. Only the independent oracle, allocation-heavy reshape backend, and direct in-place bit-shift backend are retained for the article comparison.",
+    "measured_at": "2026-08-08",
+    "repository": "https://github.com/nez0b/rustatevec",
+    "commit": "05e720d9d7289b97516a2cb62f37d9f56c405185",
+    "benchmark_source": "crates/qsv-bench/benches/throughput.rs::single_gate",
+    "command": "env RAYON_NUM_THREADS=1 RUSTFLAGS='-C target-cpu=native' cargo bench -p qsv-bench --bench throughput -- single_h_gate",
+    "criterion": {
+      "version": "0.5.1",
+      "samples": 100,
+      "warm_up_seconds": 3.0,
+      "confidence_level": 0.95,
+      "estimate": "arithmetic mean"
+    },
+    "environment": {
+      "machine": "MacBook Pro (Mac15,6)",
+      "chip": "Apple M3 Pro",
+      "cores": "11 (5 performance, 6 efficiency)",
+      "memory": "36 GB",
+      "os": "macOS 15.4.1 (Darwin 24E263)",
+      "rustc": "rustc 1.86.0 (05f9846f8 2025-03-31), LLVM 19.1.7, aarch64-apple-darwin",
+      "cargo": "cargo 1.86.0 (adf9b6ad1 2025-02-28)",
+      "rustflags": "-C target-cpu=native",
+      "rayon_num_threads": 1
+    },
+    "measurements": [
+      {
+        "backend": "oracle",
+        "display_name": "Independent oracle",
+        "qubits": 12,
+        "amplitudes": 4096,
+        "mean_ns": 9251.184099,
+        "ci95_lower_ns": 9207.097474,
+        "ci95_upper_ns": 9301.286965
+      },
+      {
+        "backend": "reshape",
+        "display_name": "Reshape + allocate",
+        "qubits": 12,
+        "amplitudes": 4096,
+        "mean_ns": 5527.237843,
+        "ci95_lower_ns": 5503.344352,
+        "ci95_upper_ns": 5556.986294
+      },
+      {
+        "backend": "bitshift",
+        "display_name": "In-place bit shift",
+        "qubits": 12,
+        "amplitudes": 4096,
+        "mean_ns": 4035.173567,
+        "ci95_lower_ns": 4005.993141,
+        "ci95_upper_ns": 4070.156891
+      },
+      {
+        "backend": "oracle",
+        "display_name": "Independent oracle",
+        "qubits": 16,
+        "amplitudes": 65536,
+        "mean_ns": 161302.352361,
+        "ci95_lower_ns": 159093.876965,
+        "ci95_upper_ns": 164249.455175
+      },
+      {
+        "backend": "reshape",
+        "display_name": "Reshape + allocate",
+        "qubits": 16,
+        "amplitudes": 65536,
+        "mean_ns": 110847.803849,
+        "ci95_lower_ns": 109298.065757,
+        "ci95_upper_ns": 112936.223530
+      },
+      {
+        "backend": "bitshift",
+        "display_name": "In-place bit shift",
+        "qubits": 16,
+        "amplitudes": 65536,
+        "mean_ns": 64731.882688,
+        "ci95_lower_ns": 64433.750561,
+        "ci95_upper_ns": 65048.248962
+      }
+    ]
+  },
+  "quest_bmi2_case_study": {
+    "description": "Ranges at three progressively broader measurement levels from the work behind QuEST issue #717 and merged PR #796. The levels are intentionally not treated as one apples-to-apples benchmark.",
+    "measured_at": "2026-06",
+    "issue": "https://github.com/QuEST-Kit/QuEST/issues/717",
+    "pull_request": "https://github.com/QuEST-Kit/QuEST/pull/796",
+    "pull_request_merged_at": "2026-06-28",
+    "environment": {
+      "cpu": "Intel Xeon Gold 6448H (Sapphire Rapids)",
+      "compiler": "GCC 11.2",
+      "notes": "Single-thread measurements unless stated otherwise; large statevectors and threaded kernels become memory-bandwidth-bound."
+    },
+    "levels": [
+      {
+        "key": "isolated",
+        "display_name": "Isolated PDEP/PEXT",
+        "scope": "Bit gather/scatter helper in a tight loop, with invariant masks hoisted",
+        "min_speedup": 6.0,
+        "max_speedup": 12.0,
+        "representative_speedup": 8.9,
+        "representative_note": "Sorted gather example: scalar 4.36 ns/call versus PEXT 0.49 ns/call",
+        "source": "PR.md, Benchmarks and AVX-512 comparison"
+      },
+      {
+        "key": "kernel",
+        "display_name": "Inside a gate kernel",
+        "scope": "One-thread, L3-resident q=18 kernel including strided complex-amplitude traffic",
+        "min_speedup": 2.53,
+        "max_speedup": 3.89,
+        "representative_speedup": 3.14,
+        "representative_note": "PDEP scatter 2.53x; sorted PEXT gather 3.89x",
+        "source": "PR.md, Thread scaling table"
+      },
+      {
+        "key": "circuit",
+        "display_name": "Whole circuits",
+        "scope": "QFT, random/supremacy, Grover, and VQE plus measurement at 12 and 16 qubits",
+        "min_speedup": 1.01,
+        "max_speedup": 1.28,
+        "representative_speedup": 1.22,
+        "representative_note": "Range across eight reported single-thread circuit measurements",
+        "samples": [1.26, 1.01, 1.16, 1.27, 1.17, 1.27, 1.15, 1.28],
+        "source": "PR.md, whole-circuit table"
+      }
+    ]
+  }
+}

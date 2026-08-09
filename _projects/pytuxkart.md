@@ -7,6 +7,7 @@ giscus_comments: false
 img: assets/img/pycart/image_boxes.png
 importance: 2
 category: work
+show_on_projects: false
 
 authors:
   - name: PoJen Wang 

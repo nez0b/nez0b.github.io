@@ -1,12 +1,12 @@
 ---
 layout: distill
-title: "From Daubechies wavelets to qubits: an N₂ quantum-chemistry pipeline"
+title: "From Daubechies wavelets to qubits"
 description: How an adaptive wavelet representation becomes a validated active-space Hamiltonian, with a fair N₂ benchmark, VQE, QSCI, and SQD.
 tags: quantum-chemistry wavelets quantum-computing
 categories: scientific-computing
 giscus_comments: false
 date: 2024-08-07
-featured: true
+featured: false
 related_posts: true
 bibliography: 2024-08-wavelet-qc.bib
 og_image: https://nez0b.github.io/assets/img/wavelet_qc/n2_dissociation_headline.png
