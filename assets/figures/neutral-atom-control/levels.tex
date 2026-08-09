@@ -1,0 +1,28 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta,positioning,decorations.pathmorphing}
+\definecolor{blue}{HTML}{0072B2}\definecolor{orange}{HTML}{E69F00}
+\definecolor{green}{HTML}{009E73}\definecolor{purple}{HTML}{CC79A7}
+\definecolor{ink}{HTML}{172033}\definecolor{muted}{HTML}{667085}
+\begin{document}
+\begin{tikzpicture}[font=\sffamily,>=Latex,line cap=round]
+  \node[font=\bfseries\large,ink] at (0,4.55) {Physical ladder};
+  \draw[ink,very thick] (-1.25,0) -- (1.25,0) node[right] {$|g\rangle$};
+  \draw[orange,very thick] (-1.25,2) -- (1.25,2) node[right] {$|e\rangle$};
+  \draw[purple,very thick] (-1.25,4) -- (1.25,4) node[right] {$|r\rangle$};
+  \draw[blue,very thick,->] (-.55,.15) -- (-.55,1.85) node[midway,left] {$\Omega_1$};
+  \draw[green,very thick,->] (.55,2.15) -- (.55,3.85) node[midway,right] {$\Omega_2$};
+  \draw[muted,<->,thick] (1.05,2.08) -- (1.05,2.82) node[midway,right=2pt] {$\Delta_e$};
+
+  \draw[muted,very thick,->] (2.55,2) -- (3.85,2);
+  \node[muted,align=center,fill=white,inner sep=2pt] at (3.2,2.62) {large detuning\\eliminate $|e\rangle$};
+
+  \node[font=\bfseries\large,ink] at (6.2,4.55) {Effective control model};
+  \draw[ink,very thick] (4.9,0) -- (7.4,0) node[right] {$|0\rangle$};
+  \draw[ink,very thick] (4.9,1.35) -- (7.4,1.35) node[right] {$|1\rangle$};
+  \draw[purple,very thick] (4.9,4) -- (7.4,4) node[right] {$|r\rangle$};
+  \draw[blue,very thick,->] (5.8,1.55) -- (5.8,3.8) node[midway,left] {$\Omega(t)$};
+  \draw[green,very thick,<->] (6.65,1.55) -- (6.65,3.8) node[midway,right] {$\Delta(t)$};
+  \node[muted,align=center] at (6.15,-.65) {$|0\rangle$ is dark; $|1\rangle\leftrightarrow|r\rangle$ is driven};
+\end{tikzpicture}
+\end{document}
