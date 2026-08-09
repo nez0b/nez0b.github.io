@@ -2,6 +2,7 @@
 layout: distill
 title: "4 · The Best Coherent Pulse Is Not Always the Best Physical Pulse"
 description: Lindblad dynamics, ensemble robustness, Rydberg exposure, and a reversal of the closed-system ranking
+img: assets/img/neutral-atom-control/part4-noise-exposure-ranking.png
 permalink: /projects/neutral-atom-control/part-4-noise-robustness/
 tags: quantum-control Lindblad robustness noise
 giscus_comments: false
@@ -27,6 +28,7 @@ toc:
   - name: The exposure budget
   - name: Open-system and ensemble optimization
   - name: The ranking reversal
+  - name: The method landscape
   - name: Laboratory note
 ---
 
@@ -407,6 +409,29 @@ which calibration parameter most changes the ranking; a targeted measurement of 
 parameter can be more valuable than another optimization run. Optimal control is not only
 the production of waveforms. It is a framework for deciding which model refinement or
 measurement would most improve the next waveform decision.
+
+## The method landscape
+
+The claim that noise reorders the ranking is a strong one, and it sits in a literature with several distinct strategies for taking noise seriously during optimization rather than after it.
+
+<table class="nac-metric-table">
+<thead><tr><th>Strategy</th><th>Noise model</th><th>Mechanism</th><th>Demonstrated on Rydberg?</th></tr></thead>
+<tbody>
+<tr><td>Post-hoc evaluation (this chapter)</td><td>Lindblad dissipation <d-cite key="lindblad1976generators"></d-cite></td><td>Optimize closed, score open</td><td>Yes, here</td></tr>
+<tr><td>Ensemble / robust GRAPE <d-cite key="kobzar2008broadband"></d-cite></td><td>Parameter spread</td><td>Average fidelity over a distribution</td><td>Originated in NMR</td></tr>
+<tr><td>Open-system GRAPE <d-cite key="schulteherbruggen2011opengrape"></d-cite></td><td>Dissipation</td><td>Propagate the density matrix directly</td><td>General</td></tr>
+<tr><td>Open-system Krotov <d-cite key="goerz2014krotovopen"></d-cite></td><td>Dissipation</td><td>Monotonic update on open dynamics</td><td>General</td></tr>
+<tr><td>Robust Rydberg co-optimization <d-cite key="mohan2023robust"></d-cite></td><td>Both</td><td>Pulse and Rydberg level chosen together</td><td>Yes</td></tr>
+</tbody>
+</table>
+
+The two mechanisms are genuinely different and are often conflated. Ensemble methods average the closed-system fidelity over a distribution of Hamiltonian parameters, which addresses _miscalibration_ — the Rabi frequency is not quite what you asked for. The trick originates in NMR, where RF inhomogeneity across a sample poses exactly this problem <d-cite key="kobzar2008broadband"></d-cite>, and it maps directly onto detuning and amplitude errors in a tweezer array. Open-system methods instead propagate the density matrix under a dissipator and address _decoherence_ — population genuinely leaves the computational space. A pulse can be robust in the first sense and bad in the second.
+
+That distinction is what makes the exposure budget in this chapter the right diagnostic: it measures time spent in $\lvert r\rangle$, which is the quantity the decay channels actually charge for. The underlying rates — including blackbody-induced transitions out of the Rydberg manifold, which dominate at room temperature for the levels used here — are tabulated in the atomic-physics literature <d-cite key="beterov2009blackbody"></d-cite>.
+
+<div class="nac-callout">
+<strong>Scope of the reversal.</strong> The ranking reversal reported here is a statement about these pulses, this Hamiltonian, and this noise model. It is evidence that coherent-fidelity ranking is not automatically the physical ranking — not evidence that any particular method is generally more robust.
+</div>
 
 ## Laboratory note
 

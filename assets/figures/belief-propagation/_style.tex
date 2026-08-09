@@ -1,0 +1,24 @@
+\usepackage{amsmath,amssymb}
+\usepackage[scaled]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning,shapes.geometric}
+\definecolor{bpink}{HTML}{172033}
+\definecolor{bpblue}{HTML}{2A78D6}
+\definecolor{bporange}{HTML}{E56A32}
+\definecolor{bpgreen}{HTML}{168A65}
+\definecolor{bppurple}{HTML}{7A5CC7}
+\definecolor{bpred}{HTML}{C94A4A}
+\definecolor{bpmuted}{HTML}{667085}
+\definecolor{bpgrid}{HTML}{D8DEE8}
+\definecolor{bpsurface}{HTML}{F8FAFC}
+\tikzset{
+  var/.style={circle,draw=bpblue,fill=bpblue!10,line width=.9pt,minimum size=8mm,font=\small\bfseries,text=bpink},
+  factor/.style={rectangle,rounded corners=1.5pt,draw=bporange,fill=bporange!14,line width=.9pt,minimum size=6.8mm,font=\small\bfseries,text=bpink},
+  constraint/.style={rectangle,rounded corners=1.5pt,draw=bpred,fill=bpred!12,line width=.9pt,minimum size=6.8mm,font=\small\bfseries,text=bpink},
+  edge/.style={draw=bpmuted!75,line width=.9pt},
+  msgvf/.style={-{Latex[length=2.2mm]},draw=bpblue,line width=1.35pt},
+  msgfv/.style={-{Latex[length=2.2mm]},draw=bporange,line width=1.35pt},
+  label/.style={font=\scriptsize,text=bpmuted,align=center},
+  title/.style={font=\bfseries\large,text=bpink},
+  card/.style={draw=bpgrid,fill=bpsurface,rounded corners=7pt,line width=.7pt},
+}

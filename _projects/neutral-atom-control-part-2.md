@@ -2,6 +2,7 @@
 layout: distill
 title: "2 · Three Traditional Routes: GRAPE, Krotov, and CRAB"
 description: Forward-backward gradients, sequential updates, randomized bases, and what their pulse shapes reveal
+img: assets/img/neutral-atom-control/part2-method-pulses.png
 permalink: /projects/neutral-atom-control/part-2-grape-krotov-crab/
 tags: quantum-control GRAPE Krotov CRAB
 giscus_comments: false
@@ -28,6 +29,7 @@ toc:
   - name: CRAB
   - name: Reading the pulses
   - name: A fair comparison
+  - name: The method landscape
   - name: Laboratory note
 ---
 
@@ -408,6 +410,29 @@ Declaring a universal winner would confuse solver performance with problem defin
 The robust conclusion is narrower: flexible gradients can nearly erase coherent error;
 a compact basis can make a strong short pulse; and neither approach natively expresses
 the full set of hardware inequalities we will want next.
+
+## The method landscape
+
+GRAPE, Krotov and CRAB are the three routes this chapter compares directly, but each is the head of a family, and the families differ in ways the comparison above does not surface.
+
+<table class="nac-metric-table">
+<thead><tr><th>Method</th><th>Search space</th><th>Gradient</th><th>Monotonic?</th><th>Open-system native?</th></tr></thead>
+<tbody>
+<tr><td>GRAPE <d-cite key="khaneja2005grape"></d-cite></td><td>Full time grid</td><td>Analytic, concurrent update</td><td>No</td><td>Via extension <d-cite key="schulteherbruggen2011opengrape"></d-cite></td></tr>
+<tr><td>Krotov <d-cite key="palao2003unitary,reich2012krotov"></d-cite></td><td>Full time grid</td><td>Analytic, sequential update</td><td>Yes, under stated conditions</td><td>Yes <d-cite key="goerz2014krotovopen"></d-cite></td></tr>
+<tr><td>CRAB <d-cite key="caneva2011crab"></d-cite></td><td>Low-dimensional random basis</td><td>Gradient-free</td><td>No</td><td>Indirectly</td></tr>
+<tr><td>dCRAB <d-cite key="rach2015dcrab"></d-cite></td><td>Re-randomized basis, iterated</td><td>Gradient-free</td><td>No</td><td>Indirectly</td></tr>
+<tr><td>GOAT <d-cite key="machnes2018goat"></d-cite></td><td>Explicit parametric pulse</td><td>Analytic, via coupled ODEs</td><td>No</td><td>Extensible</td></tr>
+</tbody>
+</table>
+
+Read as history: GRAPE <d-cite key="khaneja2005grape"></d-cite> and Krotov <d-cite key="palao2003unitary,reich2012krotov"></d-cite> both search the full time-discretized control but differ in whether amplitudes are updated concurrently or sequentially — and that difference is what buys Krotov its monotonicity guarantee. Machnes and coauthors put both into a single framework and benchmarked them against one another, which is the reference this chapter's own comparison is implicitly echoing <d-cite key="machnes2011comparing"></d-cite>. CRAB moved in the opposite direction, restricting the search to a handful of random basis coefficients so that the optimization could run on hardware where no gradient is available <d-cite key="caneva2011crab"></d-cite>; dCRAB then re-randomizes that basis between rounds to escape the artificial traps a fixed truncation introduces <d-cite key="rach2015dcrab"></d-cite>. GOAT returned to gradient-based search while keeping the pulse in an explicitly parametric, hardware-realizable form <d-cite key="machnes2018goat"></d-cite>.
+
+<div class="nac-callout">
+<strong>On Krotov's monotonicity.</strong> The guarantee is real but conditional. It relies on a quadratic-in-the-control cost and a Hamiltonian linear in the control; when the functional is higher-order in the states, the dynamics are non-unitary, or the control enters nonlinearly, a second-order term is needed to preserve it <d-cite key="reich2012krotov"></d-cite>. Quoting "Krotov converges monotonically" without those conditions is the most common overstatement about this family.
+</div>
+
+Two broader reviews cover this landscape in far more depth than a comparison table can, and are the right entry points for a reader who wants the full picture <d-cite key="glaser2015cat,koch2022review"></d-cite>. For reproducing Krotov specifically, a maintained implementation exists <d-cite key="goerz2019krotovpackage"></d-cite>.
 
 ## Laboratory note
 

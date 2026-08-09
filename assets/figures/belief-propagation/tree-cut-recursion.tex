@@ -1,0 +1,29 @@
+\documentclass[tikz,border=7pt]{standalone}
+\input{_style.tex}
+\begin{document}
+\begin{tikzpicture}[font=\sffamily]
+  \node[card,minimum width=15.8cm,minimum height=7.7cm] at (6.8,2.2) {};
+  \node[title,anchor=west] at (-.45,5.35) {Pinning the boundary disconnects a tree};
+  \begin{scope}[on background layer]
+    \filldraw[draw=bpred,fill=bpred!7,rounded corners=6pt,line width=.7pt]
+      (3.25,1.55) rectangle (8.75,5.15);
+  \end{scope}
+  \node[var] (i) at (0,3.4) {$i$};
+  \node[factor] (a) at (2,3.4) {$a$};
+  \node[var] (j) at (4,3.4) {$j$};
+  \node[factor] (b) at (6,4.55) {$b$};
+  \node[factor] (c) at (6,2.25) {$c$};
+  \node[var] (k) at (8,4.55) {$k$};
+  \node[var] (l) at (8,2.25) {$\ell$};
+  \draw[edge] (i)--(a)--(j);
+  \draw[edge] (j)--(b)--(k);
+  \draw[edge] (j)--(c)--(l);
+  \draw[bpred,densely dashed,line width=1.2pt] (3,1.25)--(3,5.15);
+  \node[text=bpred,font=\scriptsize\bfseries,rotate=90] at (2.72,1.85) {cut $j\to a$};
+  \node[anchor=west,text=bpink,font=\small] at (9.4,4.55) {$R^{j\to a}_{x_j}$};
+  \node[anchor=west,label,align=left] at (9.4,3.72) {pin $x_j$; sum every variable\\strictly inside the highlighted subtree};
+  \node[anchor=west,text=bpink,font=\large] at (9.4,2.45) {$R^{j\to a}_{x_j}=g_j(x_j)\,V^{b\to j}_{x_j}V^{c\to j}_{x_j}$};
+  \node[anchor=west,label,align=left] at (9.4,1.35) {Once $x_j$ is fixed, the $b$ and $c$\\branches share no remaining variable.\\Their partial partition functions multiply.};
+  \node[text=bpgreen,font=\scriptsize\bfseries] at (6,1.05) {exact branch independence};
+\end{tikzpicture}
+\end{document}

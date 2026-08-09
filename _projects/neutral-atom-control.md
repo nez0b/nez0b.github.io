@@ -54,13 +54,7 @@ principle, forward/backward gradients, randomized bases, and direct collocation.
 
 ## Reading map
 
-<div class="nac-chapter-grid">
-  <div class="nac-chapter-card"><h3>1 · Model</h3><p>From the physical $g-e-r$ ladder to the effective $\lvert0\rangle,\lvert1\rangle,\lvert r\rangle$ Hamiltonian, blockade, CZ, and PMP.</p><a href="/projects/neutral-atom-control/part-1-foundations/">Read Part 1 →</a></div>
-  <div class="nac-chapter-card"><h3>2 · Pulse search</h3><p>GRAPE, Krotov, and CRAB solve related—but not identical—finite-dimensional searches.</p><a href="/projects/neutral-atom-control/part-2-grape-krotov-crab/">Read Part 2 →</a></div>
-  <div class="nac-chapter-card"><h3>3 · Trajectories</h3><p>Direct collocation and Piccolo make the trajectory and its constraints decision variables.</p><a href="/projects/neutral-atom-control/part-3-collocation-piccolo/">Read Part 3 →</a></div>
-  <div class="nac-chapter-card"><h3>4 · Noise</h3><p>Lindblad dynamics and Rydberg exposure reorder the apparent winners.</p><a href="/projects/neutral-atom-control/part-4-noise-robustness/">Read Part 4 →</a></div>
-  <div class="nac-chapter-card"><h3>5 · Hardware</h3><p>Clock grids, modulation, geometry, SPAM, and an explicitly unexecuted run plan.</p><a href="/projects/neutral-atom-control/part-5-hardware-bridge/">Read Part 5 →</a></div>
-</div>
+{% include series_chapter_cards.liquid series="neutral-atom-control" %}
 
 ## What is being optimized
 

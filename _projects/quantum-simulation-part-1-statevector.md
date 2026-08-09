@@ -2,6 +2,7 @@
 layout: distill
 title: How to Optimize Statevector Simulation
 description: Insert one zero bit to enumerate every amplitude pair exactly once—and understand where the speedup goes
+img: assets/img/quantum-simulation/bit-insertion.png
 permalink: /projects/quantum-simulation/how-to-optimize-statevector-simulation/
 tags: quantum-computing statevector bit-manipulation performance
 importance: 99

@@ -48,11 +48,10 @@ bit diagrams, contraction patterns, and measurements with their provenance prese
 
 ## Reading map
 
-### 1 · Statevectors — available now
+{% include series_chapter_cards.liquid series="quantum-simulation" %}
 
-[**How to Optimize Statevector Simulation**](/projects/quantum-simulation/how-to-optimize-statevector-simulation/)
-explains the zero-bit insertion trick for applying a one-qubit gate directly to
-$2^{N-1}$ disjoint amplitude pairs. Julia supplies the pedagogical path; a Rust
+The published chapter explains the zero-bit insertion trick for applying a one-qubit gate
+directly to $2^{N-1}$ disjoint amplitude pairs. Julia supplies the pedagogical path; a Rust
 implementation supplies the reproducible benchmark; a merged QuEST contribution shows
 why instruction-level gains shrink at the memory-bandwidth wall.
 

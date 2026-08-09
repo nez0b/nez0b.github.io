@@ -5,7 +5,7 @@
       window.MathJax = {
         tex: {
           tags: 'ams',
-          {% if page.series == 'neutral-atom-control' %}
+          {% if page.series == 'neutral-atom-control' or page.series == 'belief-propagation' %}
             inlineMath: [['$', '$'], ['\\(', '\\)']],
             displayMath: [['\\[', '\\]'], ['$$', '$$']],
           {% endif %}

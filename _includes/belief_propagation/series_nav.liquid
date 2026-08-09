@@ -1,0 +1,18 @@
+{% assign current_part = page.series_part | default: 0 %}
+<nav class="bp-series-nav" aria-label="Belief propagation series navigation">
+  <div class="bp-draft"><strong>Draft series</strong> · derivations, figures, and citations are under technical review</div>
+  <div class="bp-series-kicker">Belief Propagation · Part {{ current_part }}</div>
+  <div class="bp-series-links">
+    {% if page.series_previous_url %}
+      <a href="{{ page.series_previous_url | relative_url }}">← {{ page.series_previous_label }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    <a href="{{ '/projects/belief-propagation/' | relative_url }}">Series index</a>
+    {% if page.series_next_url %}
+      <a href="{{ page.series_next_url | relative_url }}">{{ page.series_next_label }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </div>
+</nav>

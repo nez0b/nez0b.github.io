@@ -2,6 +2,7 @@
 layout: distill
 title: "1 · From Rydberg Atoms to an Optimal-Control Problem"
 description: The physical ladder, effective two-qutrit Hamiltonian, blockade, CZ, costates, and PMP
+img: assets/img/neutral-atom-control/part1-blockade-populations.png
 permalink: /projects/neutral-atom-control/part-1-foundations/
 tags: quantum-control neutral-atoms rydberg PMP
 giscus_comments: false
@@ -25,6 +26,7 @@ toc:
   - name: What counts as CZ
   - name: Why optimize
   - name: Costates and PMP
+  - name: The method landscape
   - name: Laboratory note
 ---
 
@@ -440,6 +442,27 @@ live and how the search space is shaped; none removes the need to decide what ph
 success means. With that common foundation in place, the pulse shapes in Part 2 can be
 read as consequences of parameterization and constraints rather than as mysterious
 personalities of the solvers.
+
+## The method landscape
+
+The gate used above is one point in a fairly crowded design space, and the choices that produced it are easier to judge with the alternatives in view.
+
+<table class="nac-metric-table">
+<thead><tr><th>Pulse family</th><th>Optimality criterion</th><th>Form</th><th>Blockade assumption</th></tr></thead>
+<tbody>
+<tr><td>Square / adiabatic</td><td>None — a baseline</td><td>Closed form</td><td>Perfect blockade</td></tr>
+<tr><td>Levine–Pichler two-pulse <d-cite key="levine2019parallel"></d-cite></td><td>Analytic CZ with a global phase</td><td>Closed form, two parameters</td><td>Perfect blockade</td></tr>
+<tr><td>Shaped analytic / DRAG <d-cite key="theis2016draggate"></d-cite></td><td>Leakage suppression</td><td>Closed form, derivative correction</td><td>Finite blockade tolerated</td></tr>
+<tr><td>Time-optimal PMP <d-cite key="jandura2022time"></d-cite></td><td>Minimum gate duration</td><td>Numerical, bang-bang-like</td><td>Finite blockade</td></tr>
+<tr><td>Robust co-optimized <d-cite key="mohan2023robust"></d-cite></td><td>Fidelity under parameter spread</td><td>Numerical; Rydberg state also chosen</td><td>Finite blockade</td></tr>
+</tbody>
+</table>
+
+The lineage is short and fairly linear. Shaped analytic gates were introduced to suppress leakage through the intermediate state by borrowing the DRAG idea from superconducting qubits <d-cite key="theis2016draggate"></d-cite>. Jandura and Pupillo then reformulated the same blockade gate as a genuine time-optimal control problem solved through Pontryagin's principle, which removed the need for a hand-chosen ansatz altogether <d-cite key="jandura2022time"></d-cite>. Mohan and coauthors later widened the search again, treating the choice of Rydberg level as a decision variable alongside the pulse and optimizing for robustness rather than peak fidelity <d-cite key="mohan2023robust"></d-cite>.
+
+<div class="nac-callout">
+<strong>What the table does not say.</strong> These entries optimize different objectives, so "better" is only meaningful once the objective is fixed. A time-optimal pulse is not a robust pulse, and neither is automatically the best physical pulse — a point Part 4 makes quantitatively.
+</div>
 
 ## Laboratory note
 

@@ -25,9 +25,7 @@
   \fill[navy] (0,0) rectangle (16,9);
   \fill[surface,rounded corners=12pt] (.55,.55) rectangle (15.45,8.45);
 
-  \node[anchor=west,text=mist,font=\bfseries\Large] at (1.15,7.65) {Statevector gate application is an indexing problem};
-  \node[anchor=west,text=muted,font=\small] at (1.15,7.15) {Pair amplitudes whose basis indices differ only at the target bit.};
-
+  \begin{scope}[yshift=0.35cm]
   \bitrow{0}{5.75}{0}{0}{0}{0}
   \bitrow{1}{4.75}{0}{0}{0}{1}
   \bitrow{2}{3.75}{0}{0}{1}{0}
@@ -45,9 +43,10 @@
     \node[text=white,font=\ttfamily\small] at (R\lo) {$\psi_{\hi}$};
     \draw[-{Latex[length=2.3mm]},orange,line width=1.15pt] ($(L\lo)+(.55,0)$) -- node[above,text=mist,font=\scriptsize] {$2\!\times\!2$ gate} ($(R\lo)+(-.55,0)$);
   }
+  \end{scope}
 
-  \node[anchor=west,text=muted,font=\small] at (1.15,1.30) {$a_0=\operatorname{insert0}(i,q)$};
-  \node[anchor=west,text=muted,font=\small] at (6.05,1.30) {$a_1=a_0\,\vert\,(1\ll q)$};
-  \node[anchor=east,text=mist,font=\bfseries] at (14.85,1.30) {$2^{N-1}$ disjoint pairs};
+  \node[anchor=west,text=muted,font=\small] at (1.15,1.95) {$a_0=\operatorname{insert0}(i,q)$};
+  \node[anchor=west,text=muted,font=\small] at (6.05,1.95) {$a_1=a_0\,\vert\,(1\ll q)$};
+  \node[anchor=east,text=mist,font=\bfseries] at (14.85,1.95) {$2^{N-1}$ disjoint pairs};
 \end{tikzpicture}
 \end{document}

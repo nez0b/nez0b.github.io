@@ -2,6 +2,7 @@
 layout: distill
 title: "3 · Optimizing the Whole Trajectory: Direct Collocation and Piccolo"
 description: Dynamics defects, hard hardware constraints, minimum time, gauge freedom, and an honest Piccolo result
+img: assets/img/neutral-atom-control/part3-collocation-piccolo-results.png
 permalink: /projects/neutral-atom-control/part-3-collocation-piccolo/
 tags: quantum-control collocation Piccolo CasADi
 giscus_comments: false
@@ -28,6 +29,7 @@ toc:
   - name: What Piccolo adds
   - name: The gauge-hole experiment
   - name: Results and limits
+  - name: The method landscape
   - name: Laboratory note
 ---
 
@@ -336,12 +338,12 @@ from failure is not an approximation to the problem.
 For a diagonal two-qubit operation, local phase corrections transform the basis phases
 in a structured way:
 
-| basis state | original phase | after equal local $Z(\theta)$ corrections |
-| ----------- | -------------- | ----------------------------------------- |
-| $\lvert00\rangle$ | $\phi_{00}$ | $\phi_{00}$ |
-| $\lvert01\rangle$ | $\phi_{01}$ | $\phi_{01}+\theta$ |
-| $\lvert10\rangle$ | $\phi_{10}$ | $\phi_{10}+\theta$ |
-| $\lvert11\rangle$ | $\phi_{11}$ | $\phi_{11}+2\theta$ |
+| basis state       | original phase | after equal local $Z(\theta)$ corrections |
+| ----------------- | -------------- | ----------------------------------------- |
+| $\lvert00\rangle$ | $\phi_{00}$    | $\phi_{00}$                               |
+| $\lvert01\rangle$ | $\phi_{01}$    | $\phi_{01}+\theta$                        |
+| $\lvert10\rangle$ | $\phi_{10}$    | $\phi_{10}+\theta$                        |
+| $\lvert11\rangle$ | $\phi_{11}$    | $\phi_{11}+2\theta$                       |
 
 Substituting the corrected phases into
 $\Phi=\phi_{00}-\phi_{01}-\phi_{10}+\phi_{11}$ cancels both copies of $\theta$.
@@ -405,6 +407,23 @@ it quantifies the duration cost of a particular set of physical constraints and 
 fully rolled-out candidates for the subsequent noise comparison.
 It also leaves a reproducible baseline against which a different mesh, objective, or
 trajectory package can be compared without silently changing the scientific question.
+
+## The method landscape
+
+Collocation is the third distinct way to pose the same control problem, and the three differ in _where the dynamics constraint lives_ rather than in what they are ultimately solving.
+
+<table class="nac-metric-table">
+<thead><tr><th>Approach</th><th>Dynamics enforced by</th><th>Solver</th><th>Free final time?</th></tr></thead>
+<tbody>
+<tr><td>Indirect shooting / PMP (Part 1)</td><td>Forward integration plus costate equations</td><td>Boundary-value / root find</td><td>Awkward — costates must be re-derived</td></tr>
+<tr><td>GRAPE, Krotov (Part 2)</td><td>Forward integration, implicitly</td><td>Gradient ascent</td><td>Usually fixed, scanned externally</td></tr>
+<tr><td>Direct collocation <d-cite key="betts2010practical,trowbridge2023collocation"></d-cite></td><td>Algebraic defect constraints at knot points</td><td>Large sparse NLP</td><td>Natural — time is a variable</td></tr>
+</tbody>
+</table>
+
+Direct collocation is long-established in classical trajectory optimization <d-cite key="betts2010practical"></d-cite>; the adaptation to quantum gates is recent, and the Piccolo/QuantumCollocation line of work is its clearest statement <d-cite key="trowbridge2023collocation"></d-cite>. The essential move is to stop integrating the Schrödinger equation and instead make the state trajectory itself a decision variable, with the dynamics imposed as algebraic defect constraints that the NLP solver drives to zero.
+
+What that buys is exactly what the shooting formulations find awkward: hard constraints on amplitudes and slew rates are ordinary inequality constraints, and minimum-time problems need no re-derivation because the final time is just another variable. What it costs is a dependence on a mature large-scale NLP solver, and a problem whose size grows with the number of knot points times the state dimension — which is precisely the scaling this chapter's own 9-level experiment ran into.
 
 ## Laboratory note
 

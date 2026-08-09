@@ -1,0 +1,35 @@
+{% comment %}
+  Chapter cards for an article series.
+
+  Usage:  {% include series_chapter_cards.liquid series="belief-propagation" %}
+
+  Renders one image-above-text card per chapter page, ordered by `series_part`.
+  A chapter is any page in the `projects` collection carrying a matching
+  `series:` field and a `series_part:` number. Chapters without an `img:`
+  degrade to a text-only card rather than a broken image.
+{% endcomment %}
+
+{% assign chapters = site.projects | where: 'series', include.series | sort: 'series_part' %}
+
+<div class="series-chapter-cards">
+  {% for chapter in chapters %}
+    {% if chapter.series_part %}
+      <a class="series-chapter-card" href="{{ chapter.url | relative_url }}">
+        {% if chapter.img %}
+          <div class="series-chapter-thumb">
+            {% include figure.liquid loading="lazy" path=chapter.img sizes="420px" alt=chapter.title class="series-chapter-img" %}
+          </div>
+        {% endif %}
+        {% comment %}Some chapter titles already begin with "N · "; the kicker supplies the number.{% endcomment %}
+        {% capture numbered_prefix %}{{ chapter.series_part }} · {% endcapture %}
+        {% assign display_title = chapter.title | remove_first: numbered_prefix %}
+        <div class="series-chapter-body">
+          <span class="series-chapter-kicker">Part {{ chapter.series_part }}</span>
+          <h3 class="series-chapter-title">{{ display_title }}</h3>
+          <p class="series-chapter-desc">{{ chapter.description }}</p>
+          <span class="series-chapter-more">Read this chapter →</span>
+        </div>
+      </a>
+    {% endif %}
+  {% endfor %}
+</div>

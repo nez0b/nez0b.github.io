@@ -2,6 +2,7 @@
 layout: distill
 title: "5 · From Optimized Arrays to Hardware Candidates"
 description: Pulser sequences, clocks, channel modulation, geometry, anonymized SPAM calibration, and an unexecuted run plan
+img: assets/img/neutral-atom-control/part5-programmed-delivered.png
 permalink: /projects/neutral-atom-control/part-5-hardware-bridge/
 tags: quantum-control neutral-atoms Pulser hardware
 giscus_comments: false
@@ -26,6 +27,7 @@ toc:
   - name: Geometry is a constraint
   - name: Aggregate hardware calibration
   - name: The proposed run
+  - name: The hardware landscape
   - name: What remains for native CZ
 ---
 
@@ -365,6 +367,25 @@ being described as an emitted waveform and prevents a calibrated prediction from
 described as an observation. Keeping hashes and transformations makes disagreements
 traceable: one can ask whether the optimizer array, exported sequence, delivered model,
 or measurement interpretation first changed the conclusion.
+
+## The hardware landscape
+
+The run plan above is calibrated against a moving target, and it is worth locating it among the hardware results that define what is currently achievable.
+
+<table class="nac-metric-table">
+<thead><tr><th>Demonstration</th><th>What was controlled</th><th>Relevance here</th></tr></thead>
+<tbody>
+<tr><td>Levine et al. 2019 <d-cite key="levine2019parallel"></d-cite></td><td>A single high-fidelity CZ via analytic pulses</td><td>The protocol Part 1 takes as baseline</td></tr>
+<tr><td>Bluvstein et al. 2022 <d-cite key="bluvstein2022coherent"></d-cite></td><td>Coherent transport of entangled atoms by AOD tweezers</td><td>Geometry becomes dynamic, not fixed</td></tr>
+<tr><td>Evered et al. 2023 <d-cite key="evered2023highfidelity"></d-cite></td><td>Parallel entangling gates above the surface-code threshold</td><td>Parallelism is the regime this series targets</td></tr>
+<tr><td>Ma et al. 2023 <d-cite key="ma2023erasure"></d-cite></td><td>High-fidelity gates with mid-circuit erasure conversion</td><td>Errors engineered to be <em>detectable</em></td></tr>
+<tr><td>Bluvstein et al. 2024 <d-cite key="bluvstein2024logical"></d-cite></td><td>Logical qubits on reconfigurable arrays</td><td>The system level this pipeline feeds</td></tr>
+</tbody>
+</table>
+
+Two of these change how the present chapter's constraints should be read. Coherent transport <d-cite key="bluvstein2022coherent"></d-cite> means the array geometry is not a fixed boundary condition but part of the control problem, so a pulse optimized for one blockade configuration may be executed in another. And erasure conversion <d-cite key="ma2023erasure"></d-cite> changes the objective itself: an error that announces itself is worth substantially more than a silent one of the same magnitude, which is not something a plain infidelity number captures.
+
+The delivery channel has its own literature. The AOD waveform synthesis that produces tweezer patterns has finite bandwidth and latency, and those limits bound how fast any optimized pulse can actually be applied <d-cite key="mittenbuhler2025aod"></d-cite>. This is the concrete form of the argument this chapter has been making: a pulse is a request, and the channel decides what arrives.
 
 ## What remains for native CZ
 
