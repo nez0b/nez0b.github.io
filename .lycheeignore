@@ -1,0 +1,4 @@
+# local dev server URLs in the repo docs
+^https?://(127\.0\.0\.1|localhost)(:[0-9]+)?
+# ubuntu.com answers link checkers with 503/timeouts; the page loads in a browser
+^https://ubuntu\.com/tutorials/
