@@ -1,0 +1,21 @@
+{% comment %}
+  Navigation box for the two-part quantum circuit optimization series (blog posts, not projects).
+  Front matter: series_part, and series_previous_url/label or series_next_url/label.
+  Styled in each post's _styles (.qco-series-nav), so assets/css/main.scss is untouched.
+{% endcomment %}
+{% assign current_part = page.series_part | default: 0 %}
+<nav class="qco-series-nav" aria-label="Quantum circuit optimization series navigation">
+  <div class="qco-series-kicker">Quantum circuit optimization · Part {{ current_part }} of 2</div>
+  <div class="qco-series-links">
+    {% if page.series_previous_url %}
+      <a href="{{ page.series_previous_url | relative_url }}">← {{ page.series_previous_label }}</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+    {% if page.series_next_url %}
+      <a href="{{ page.series_next_url | relative_url }}">{{ page.series_next_label }} →</a>
+    {% else %}
+      <span></span>
+    {% endif %}
+  </div>
+</nav>

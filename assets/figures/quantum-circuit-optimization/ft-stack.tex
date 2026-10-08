@@ -1,0 +1,55 @@
+% Data: none measured. Each FT cell restates a verified source of Part 1's section 7: Clifford+T and magic
+% states (Litinski 2019, Game of Surface Codes); about 3 log2(1/eps) T gates per rotation (Ross and Selinger,
+% gridsynth); T-count via phase polynomials (Amy, Maslov and Mosca 2014), Reed-Muller decoding (TODD,
+% Heyfron and Campbell 2019), ZX and AlphaTensor-Quantum; lattice-surgery routing (Beverland et al. 2022,
+% DASCOT 2025); space-time volume from resource estimators (Azure RE, Qualtran); cultivation (Gidney,
+% Shutty and Jones 2024; Google experiment 2025).
+% Message: a fault-tolerant compiler does the same jobs as a NISQ one, but the price list is different:
+% two-qubit gates get cheap, T gates get expensive, and routing comes back one level up.
+\begin{tikzpicture}[primer,
+    every node/.append style={execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    job/.style={p tag,text width=21mm,align=right,anchor=east,font=\sffamily\bfseries\footnotesize},
+    nisq/.style={p box,fill=psky!14,draw=pblue!70!black,text width=47mm,minimum height=15mm,
+                 align=left,font=\sffamily\footnotesize,anchor=north west},
+    ft/.style={p box,fill=pred!8,draw=pred!80!black,text width=70mm,minimum height=15mm,
+               align=left,font=\sffamily\footnotesize,anchor=north west},
+    head/.style={p tag,align=left,anchor=base west,font=\sffamily\bfseries\footnotesize},
+  ]
+  % ---- one row per job; the two cells of a row share their top edge and their height ----
+  \coordinate (r1) at (0,0);
+  \foreach \i/\job/\nisqtext/\fttext in {
+      1/{gates the machine runs}/
+        {CX or CZ, plus any one-qubit rotation, on physical qubits}/
+        {Clifford gates plus T, on logical qubits; each logical qubit is a patch of hundreds of physical qubits},
+      2/{what costs most}/
+        {two-qubit gates (each adds noise) and depth (qubits decohere while they wait)}/
+        {T gates: each one uses up a magic state, made on the side by distillation or cultivation},
+      3/{rotations}/
+        {cheap: at most a few native gates, and Z rotations are often free}/
+        {approximated by Clifford+T: about $3\log_2(1/\varepsilon)$ T gates per Z rotation for error $\varepsilon$ (gridsynth)},
+      4/{optimise}/
+        {cancel CX, merge rotations, shorten depth}/
+        {cut T-count and T-depth: phase polynomials, Reed--Muller decoding (TODD), ZX, AlphaTensor-Quantum},
+      5/{place and route}/
+        {put qubits on the chip, insert SWAPs}/
+        {lay out patches on a grid; lattice surgery joins them along free paths, so routing is back},
+      6/{final score}/
+        {estimated fidelity, CX count, depth}/
+        {space-time volume: physical qubits $\times$ run time, from a resource estimator}} {
+    \node[nisq] (n\i) at (r\i) {\nisqtext};
+    \node[ft,right=3mm of n\i.north east,anchor=north west] (f\i) {\fttext};
+    \node[job] at ([xshift=-3mm]n\i.west) {\job};
+    \pgfmathtruncatemacro{\nxt}{\i+1}
+    \coordinate (r\nxt) at ([yshift=-2.5mm]n\i.south west);
+  }
+
+  % ---- column heads ----
+  \node[head] at ([yshift=3mm]n1.north west) {NISQ compiler};
+  \node[head] at ([yshift=3mm]f1.north west) {fault-tolerant compiler};
+
+  % ---- the 2024--26 change, under the FT column ----
+  \node[p note,text width=70mm,align=left,anchor=north west,font=\sffamily\scriptsize\itshape]
+    at ([yshift=-2.5mm]f6.south west)
+    {Magic-state cultivation, proposed in 2024, puts a T state at about the cost of a lattice-surgery CNOT.
+     If that holds, T-count alone stops being the whole bill, and routing and idle patches count again.};
+\end{tikzpicture}

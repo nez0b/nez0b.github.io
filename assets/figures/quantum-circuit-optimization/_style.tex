@@ -1,0 +1,88 @@
+% =====================================================================
+%  _style.tex -- figure style for the "quantum circuit optimization" series.
+%  Every code line below is copied verbatim, in order, from the preamble of
+%  the depth-95 explainer report, so these figures match the figures of
+%  Part 2 exactly. The build script refuses to render if that stops being
+%  true (any line edited, or any style or colour added or dropped).
+%  Wrapper: \documentclass[preview,border=4pt,12pt]{standalone}.
+% =====================================================================
+
+% ---------- fonts ----------
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+% ---------- math ----------
+\usepackage{amsmath,amssymb,amsthm,bm,mathtools}
+
+% ---------- graphics ----------
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds,shapes.geometric,
+                shapes.misc,decorations.pathreplacing,decorations.markings,
+                decorations.pathmorphing,patterns,intersections,matrix,chains}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween,groupplots}
+\usepackage[edges]{forest}
+\usepackage{tikz-cd}
+\usetikzlibrary{quantikz2}          % quantum circuits (quantikz v2 as a TikZ library)
+\usetikzlibrary{circuits.logic.US}  % AND / XOR gate symbols for logic networks
+
+% ---------- prose ----------
+\usepackage{microtype}
+
+% ---------- colours (Okabe--Ito, plus three neutrals) ----------
+\definecolor{pblue}{HTML}{0072B2}
+\definecolor{porange}{HTML}{E69F00}
+\definecolor{pgreen}{HTML}{009E73}
+\definecolor{pred}{HTML}{D55E00}
+\definecolor{ppurple}{HTML}{CC79A7}
+\definecolor{psky}{HTML}{56B4E9}
+\definecolor{pyellow}{HTML}{F0E442}
+\definecolor{pdark}{HTML}{243447}
+\definecolor{plight}{HTML}{F4F7F9}
+\definecolor{pgray}{HTML}{7A8794}
+
+% ---------- TikZ house style ----------
+\tikzset{
+  % --- arrows ---
+  p flow/.style     ={-{Latex[length=2.5mm]},line width=.9pt,draw=pdark},
+  p thin/.style     ={-{Latex[length=2mm]},line width=.6pt,draw=pgray},
+  p return/.style   ={-{Latex[length=2.3mm]},line width=.8pt,draw=pred,dashed},
+  p link/.style     ={line width=.7pt,draw=pgray,dotted},
+  p bidir/.style    ={{Latex[length=2.3mm]}-{Latex[length=2.3mm]},line width=.9pt,draw=pdark},
+  % --- nodes ---
+  p box/.style      ={rounded corners=2pt,draw=pdark,line width=.7pt,fill=plight,
+                      align=center,inner sep=5pt,text width=30mm},
+  p wide/.style     ={p box,text width=52mm},
+  p tight/.style    ={rounded corners=2pt,draw=pdark,line width=.7pt,fill=plight,
+                      align=center,inner sep=4pt},
+  p gate/.style     ={diamond,aspect=1.5,draw=pdark,line width=.8pt,
+                      fill=pyellow!55,align=center,inner sep=2pt,text width=16mm},
+  p good/.style     ={p box,draw=pgreen!70!black,fill=pgreen!12},
+  p bad/.style      ={p box,draw=pred!80!black,fill=pred!10},
+  p neutral/.style  ={p box,draw=pblue!70!black,fill=psky!14},
+  p accent/.style   ={p box,draw=porange!80!black,fill=porange!14},
+  % --- text ---
+  p note/.style     ={font=\sffamily\scriptsize,align=center,text=pdark,text width=34mm},
+  p tag/.style      ={font=\sffamily\bfseries\scriptsize,text=pdark,inner sep=2pt},
+  p axis/.style     ={line width=.8pt,draw=pdark,-{Latex[length=2.2mm]}},
+}
+
+\tikzset{primer/.style={font=\sffamily\small,node distance=8mm and 10mm}}
+
+% ---------- forest tree style: text width must sit inside node options ----------
+\forestset{
+  p tree/.style={
+    for tree={
+      grow'=east, growth parent anchor=east, parent anchor=east, child anchor=west,
+      draw=pdark, line width=.6pt, rounded corners=2pt,
+      inner sep=3.5pt, font=\sffamily\footnotesize,
+      node options={align=left, text width=34mm},
+      edge={draw=pgray,line width=.6pt},
+      edge path'={(!u.parent anchor) -- ++(4mm,0) |- (.child anchor)},
+      l sep=9mm, s sep=2.2mm,
+    },
+  },
+}

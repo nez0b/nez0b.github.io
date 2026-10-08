@@ -1,0 +1,47 @@
+% Data: stage names and order read from Qiskit 2.5.2, generate_preset_pass_manager(...).stages =
+% (init, layout, routing, translation, optimization, scheduling); the optimization stage of the preset
+% levels repeats its passes in a do_while loop with FixedPoint/MinimumPoint checks on depth and size.
+% Message: a transpiler is a fixed sequence of stages, each with one job; only two of them exist because
+% of the device's wiring, and only one of them is "optimisation" in the everyday sense.
+\begin{tikzpicture}[primer,
+    every node/.append style={execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    stage/.style={p box,text width=25mm,minimum height=8mm,font=\sffamily\footnotesize\bfseries},
+    what/.style={p note,text width=82mm,align=left,font=\sffamily\footnotesize,anchor=west},
+    io/.style={p tight,fill=white,font=\sffamily\footnotesize,text width=50mm},
+  ]
+  \node[io] (in) {a circuit: any gates, on virtual qubits};
+  \node[stage,below=7mm of in] (init) {init};
+  \node[stage,below=5mm of init,p neutral,text width=25mm] (layout) {layout};
+  \node[stage,below=5mm of layout,p neutral,text width=25mm] (routing) {routing};
+  \node[stage,below=5mm of routing] (translation) {translation};
+  \node[stage,below=5mm of translation,p accent,text width=25mm] (optimization) {optimization};
+  \node[stage,below=5mm of optimization] (scheduling) {scheduling};
+  \node[io,below=7mm of scheduling] (out) {a circuit the device can run};
+
+  \foreach \a/\b in {in/init,init/layout,layout/routing,routing/translation,translation/optimization,
+                     optimization/scheduling,scheduling/out} { \draw[p flow] (\a) -- (\b); }
+
+  % ---- one line per stage: what it does ----
+  \node[what] at ([xshift=6mm]init.east)
+    {split gates on three or more qubits into one- and two-qubit gates; from level 1, also cancel easy pairs};
+  \node[what] at ([xshift=6mm]layout.east)
+    {choose which physical qubit holds each virtual qubit};
+  \node[what] at ([xshift=6mm]routing.east)
+    {insert SWAPs until every two-qubit gate acts on a pair the device connects};
+  \node[what] at ([xshift=6mm]translation.east)
+    {rewrite every gate in the device's native gates, for example CZ and one-qubit rotations};
+  \node[what] at ([xshift=6mm]optimization.east)
+    {cancel, merge and re-synthesise gates, and repeat while depth and gate count still fall};
+  \node[what] at ([xshift=6mm]scheduling.east)
+    {when asked: give each gate a start time and fill idle gaps, for example with dynamical decoupling};
+
+  % ---- the optimisation loop ----
+  \draw[p return] ([yshift=-2mm]optimization.west) -- ++(-7mm,0) |- ([yshift=2mm]optimization.west)
+    node[pos=.25,left=1mm,font=\sffamily\scriptsize,text=pred!80!black,align=right] {repeat};
+
+  % ---- the two wiring stages ----
+  \draw[decorate,decoration={brace,amplitude=4pt,mirror},line width=.7pt,draw=pblue!70!black]
+    ([xshift=-9mm]layout.north west) -- ([xshift=-9mm]routing.south west)
+    node[midway,left=3mm,font=\sffamily\scriptsize,text=pblue!70!black,align=right,text width=22mm]
+    {only because not every pair of qubits is wired};
+\end{tikzpicture}
