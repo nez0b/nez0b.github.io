@@ -1,0 +1,61 @@
+% Data: the Classiq logo challenge (Part 2). Baseline 18/5329/3502 is the organisers' reference circuit,
+% reproduced by Classiq synthesis of their 18-rectangle model. Gate-level row: Qiskit 2.5.2
+% transpile(optimization_level=3) 5021/3355 (seeds 0-4 identical), pytket 2.18.1 FullPeepholeOptimise then
+% Qiskit O3 5004/3347, every output verified (measured 2026-10-08); my reordering-only rescheduler
+% 5329 -> 4665 with CX unchanged (2026-09-11). Logic row: best ESOP (XOR of products) circuit 1886/1142
+% (2026-09-08); hand-shaped AND/XOR networks 468/845 at first, 345/637 after reordering their gates.
+% Design row: 95/272, and 107 before gate-level polishing (Part 2's ladder).
+% Message: an optimiser can only change what its level of description shows it. Each step down forgets
+% something, so the large gains on this challenge came from the top rows, not from gate-level passes.
+\begin{tikzpicture}[primer,
+    cell/.style={p box,minimum height=23mm,align=left,font=\sffamily\footnotesize,
+                 execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    lvl/.style={cell,text width=31mm},
+    who/.style={cell,fill=white,text width=48mm},
+    res/.style={cell,fill=white,text width=51mm},
+    gap/.style={p note,text width=128mm,align=left,font=\sffamily\scriptsize\itshape},
+    head/.style={p tag,text width=#1,align=left,anchor=base west},
+  ]
+  % ---- rows, top (most abstract) to bottom; every cell has the same height, so rows align ----
+  \node[lvl,draw=porange!85!black,fill=porange!14] (L3)
+    {\textbf{Problem}\\ sees: an image made of a few shapes; helper qubits free to use};
+  \node[who,right=4mm of L3] (W3)
+    {\textbf{Algorithm design}\\ choose what to compute and on which qubits, then search over the choices};
+  \node[res,right=4mm of W3] (R3)
+    {\textbf{95} \hfill (272 CX)\\ one sandwich, two small codes, a search over the codes; 107 before polishing};
+
+  \node[lvl,draw=pgreen!70!black,fill=pgreen!12,below=10mm of L3] (L2)
+    {\textbf{Boolean function}\\ sees: which of the 4096 pixels are black};
+  \node[who,right=4mm of L2] (W2)
+    {\textbf{Logic synthesis}\\ write the function as an XOR of products or an AND/XOR network, then as gates};
+  \node[res,right=4mm of W2] (R2)
+    {\textbf{1886} \hfill (1142 CX)\\ my best XOR-of-products circuit from the truth table; 345 with networks shaped by hand};
+
+  \node[lvl,draw=pblue!70!black,fill=psky!14,below=10mm of L2] (L1)
+    {\textbf{Gate list}\\ sees: the gates, and the unitary they must keep};
+  \node[who,right=4mm of L1] (W1)
+    {\textbf{Transpilers}\\ cancel, commute, merge and re-synthesise gates: Qiskit, tket, PyZX, BQSKit};
+  \node[res,right=4mm of W1] (R1)
+    {\textbf{4665} \hfill (3502 CX)\\ my rescheduler, reordering the 5329 baseline; Qiskit gives 5021, tket then Qiskit 5004};
+
+  \node[lvl,draw=pgray!80!black,fill=pgray!14,below=10mm of L1] (L0)
+    {\textbf{Hardware}\\ sees: which qubit pairs can interact, timing, noise};
+  \node[who,right=4mm of L0] (W0)
+    {\textbf{Mapping}\\ place qubits, route with SWAPs, schedule, compile pulses};
+  \node[res,right=4mm of W0] (R0)
+    {\textbf{not scored}\\ any two qubits may share a CX, and only depth counts};
+
+  % ---- column heads, on one line ----
+  \node[head=31mm] at ([yshift=3mm]L3.north west) {level};
+  \node[head=48mm] at ([yshift=3mm]W3.north west) {who works there};
+  \node[head=51mm] at ([yshift=3mm]R3.north west) {depth on the logo challenge};
+
+  % ---- lowering: each step down forgets or adds something ----
+  \foreach \a/\b/\txt in {
+      L3/L2/{forgets the shapes: only a table of 4096 bits is left},
+      L2/L1/{forgets that the helpers start and end at 0, and which gates compute what},
+      L1/L0/{adds the device: which pairs can talk, how long each gate takes, how noisy it is}} {
+    \draw[p flow] ([xshift=-8mm]\a.south) -- ([xshift=-8mm]\b.north)
+      node[midway,right=1.5mm,gap,anchor=west] {\txt};
+  }
+\end{tikzpicture}

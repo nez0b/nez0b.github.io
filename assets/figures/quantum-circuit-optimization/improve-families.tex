@@ -1,0 +1,110 @@
+% Data: toy circuits, no measurement. Row 1: Rz on a CX control commutes with the CX, so
+% Rz(a) CX Rz(b) CX = Rz(a+b) CX CX = Rz(a+b). Row 2: any two-qubit unitary needs at most 3 CX (the KAK /
+% Cartan decomposition), so a 4-CX block can always be rebuilt with 3 or fewer. Row 3: ZX-calculus
+% (Z spiders green, X spiders red) as used by PyZX: translate, simplify the graph, extract a circuit.
+% Row 4: rewrite-rule search as in Quartz/QUESO/GUOQ; the numbers are made-up costs that show why a
+% search sometimes accepts a worse circuit.
+% Message: the four families of "improve a circuit you already have" differ in how far they look: one
+% gate pair, one small block, the whole circuit in another language, or a search over many rewrites.
+\begin{tikzpicture}[primer,
+    every node/.append style={execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    fam/.style={p tag,anchor=base west,font=\sffamily\bfseries\footnotesize},
+    txt/.style={p note,text width=38mm,align=left,anchor=west,font=\sffamily\scriptsize},
+    head/.style={p tag,anchor=base,font=\sffamily\bfseries\footnotesize,text=pgray!80!black},
+    move/.style={-{Latex[length=2mm]},line width=.8pt,draw=pgray},
+    good move/.style={move,draw=pgreen!70!black,line width=1pt},
+    rule/.style={line width=.4pt,draw=pgray!60},
+    zs/.style={circle,draw=pgreen!70!black,fill=pgreen!18,line width=.6pt,minimum size=3.2mm,inner sep=0pt},
+    xs/.style={circle,draw=pred!80!black,fill=pred!18,line width=.6pt,minimum size=3.2mm,inner sep=0pt},
+    zx/.style={line width=.6pt,draw=pdark},
+    cost/.style={rounded corners=1.5pt,draw=pdark,line width=.6pt,fill=white,inner sep=2pt,
+                 font=\sffamily\scriptsize,minimum width=7mm},
+    best/.style={cost,draw=pgreen!70!black,fill=pgreen!12,line width=.9pt},
+    qk/.style={anchor=center,inner sep=0pt},
+  ]
+  \def\colB{25mm}\def\colA{83mm}\def\colN{112mm}
+
+  % ---- column heads ----
+  \node[head] at (\colB,7mm) {before};
+  \node[head] at (\colA,7mm) {after};
+  \node[head,anchor=base west] at (\colN,7mm) {what changed};
+
+  % ---- 1. local rewrite ----
+  \node[fam] at (0,0) {1.\ local rewrites};
+  \node[qk] (b1) at (\colB,-11mm) {%
+    \begin{quantikz}[row sep={6mm,between origins},column sep=1.6mm,font=\scriptsize]
+      & \gate{R_z(\alpha)} & \ctrl{1} & \gate{R_z(\beta)} & \ctrl{1} & \\
+      & \qw & \targ{} & \qw & \targ{} &
+    \end{quantikz}};
+  \node[qk] (a1) at (\colA,-11mm) {%
+    \begin{quantikz}[row sep={6mm,between origins},column sep=1.6mm,font=\scriptsize]
+      & \gate{R_z(\alpha+\beta)} & \\
+      & \qw & \qw &
+    \end{quantikz}};
+  \node[txt] at (\colN,-11mm)
+    {A $Z$ rotation slides through the CX control, the two CX meet and cancel, and the rotations merge.};
+
+  % ---- 2. re-synthesise a block ----
+  \node[fam] at (0,-29mm) {2.\ re-synthesise a block};
+  \node[qk] (b2) at (\colB,-40mm) {%
+    \begin{quantikz}[row sep={6mm,between origins},column sep=1.2mm,font=\scriptsize]
+      & \ctrl{1} & \gate{u} & \targ{} & \gate{u} & \ctrl{1} & \gate{u} & \targ{} & \\
+      & \targ{} & \gate{u} & \ctrl{-1} & \gate{u} & \targ{} & \gate{u} & \ctrl{-1} &
+    \end{quantikz}};
+  \node[qk] (a2) at (\colA,-40mm) {%
+    \begin{quantikz}[row sep={6mm,between origins},column sep=1.2mm,font=\scriptsize]
+      & \gate{u} & \ctrl{1} & \gate{u} & \ctrl{1} & \gate{u} & \ctrl{1} & \gate{u} & \\
+      & \gate{u} & \targ{} & \gate{u} & \targ{} & \gate{u} & \targ{} & \gate{u} &
+    \end{quantikz}};
+  \node[txt] at (\colN,-40mm)
+    {No pair cancels, but the block's $4\times4$ matrix fixes it, and any two-qubit gate needs at most
+     3 CX. Rebuild it from the matrix.};
+
+  % ---- 3. change the language: ZX ----
+  \node[fam] at (0,-58mm) {3.\ change the language (ZX-calculus)};
+  \begin{scope}[shift={(\colB,-69mm)}]
+    \node[zs] (z1) at (-13mm, 3.5mm) {}; \node[xs] (z2) at (-6mm, 3.5mm) {};
+    \node[zs] (z3) at (  1mm, 3.5mm) {}; \node[xs] (z4) at (  8mm, 3.5mm) {};
+    \node[xs] (z5) at (-9.5mm,-3.5mm) {}; \node[zs] (z6) at ( -2.5mm,-3.5mm) {};
+    \node[zs] (z7) at (  4.5mm,-3.5mm) {}; \node[xs] (z8) at ( 11.5mm,-3.5mm) {};
+    \draw[zx] (-17mm,3.5mm) -- (z1) -- (z2) -- (z3) -- (z4) -- (15mm,3.5mm);
+    \draw[zx] (-17mm,-3.5mm) -- (z5) -- (z6) -- (z7) -- (z8) -- (15mm,-3.5mm);
+    \draw[zx] (z1) -- (z5) (z2) -- (z6) (z3) -- (z7) (z4) -- (z8) (z2) -- (z7);
+  \end{scope}
+  \begin{scope}[shift={(\colA,-69mm)}]
+    % no two neighbours share a colour, so no fusion rule applies: a CX, then an X phase on the top wire
+    \node[zs] (y1) at (-4mm, 3.5mm) {}; \node[xs] (y2) at (4mm, 3.5mm) {};
+    \node[xs] (y3) at (-4mm,-3.5mm) {};
+    \draw[zx] (-12mm,3.5mm) -- (y1) -- (y2) -- (12mm,3.5mm);
+    \draw[zx] (-12mm,-3.5mm) -- (y3) -- (12mm,-3.5mm);
+    \draw[zx] (y1) -- (y3);
+  \end{scope}
+  \node[txt] at (\colN,-69mm)
+    {Turn the gates into a graph of green and red nodes, shrink the graph with its own rules, then turn
+     it back into gates. That last step is the hard one.};
+
+  % ---- 4. search over rewrites ----
+  \node[fam] at (0,-87mm) {4.\ search over rewrites};
+  \begin{scope}[shift={(0,-100mm)}]
+    \node[cost] (s0) at (8mm,0) {12};
+    \node[cost] (s1) at (24mm,7mm) {13};
+    \node[cost] (s2) at (24mm,0) {11};
+    \node[cost] (s3) at (24mm,-7mm) {12};
+    \node[cost] (s4) at (42mm,0) {10};
+    \node[best] (s5) at (42mm,7mm) {8};
+    \node[best] (s6) at (60mm,7mm) {7};
+    \draw[move] (s0) -- (s2); \draw[move] (s0) -- (s3); \draw[move] (s2) -- (s4);
+    \draw[good move] (s0) -- (s1); \draw[good move] (s1) -- (s5); \draw[good move] (s5) -- (s6);
+    \node[font=\sffamily\scriptsize,text=pgreen!60!black,align=left,text width=34mm,anchor=west]
+      at ([xshift=2mm]s6.east) {a worse step first, then better circuits};
+    \node[font=\sffamily\scriptsize,text=pgray!80!black,align=left,text width=34mm,anchor=west]
+      at ([xshift=2mm]s4.east) {always taking the best next step stops here};
+  \end{scope}
+  \node[txt] at (\colN,-100mm)
+    {Each arrow applies one equivalence rule, and each box is a circuit's cost. Accepting a worse circuit
+     now and then lets the search get past a dead end.};
+
+  % ---- separators and before -> after arrows ----
+  \foreach \y in {-23mm,-52mm,-81mm} { \draw[rule] (0mm,\y) -- (150mm,\y); }
+  \foreach \y in {-11mm,-40mm,-69mm} { \draw[move] (52mm,\y) -- (58mm,\y); }
+\end{tikzpicture}

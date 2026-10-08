@@ -1,0 +1,56 @@
+% Data: a worked toy, no measurement. Four qubits on a line P0-P1-P2-P3, holding a, b, c, d; the circuit
+% asks for CX(a, d). Two SWAPs move d next to a: SWAP(P2,P3) then SWAP(P1,P2) leaves a, d, b, c; then
+% CX(P0, P1). A SWAP is 3 CX, so one CX became 7. Starting from the layout a, d, b, c needs no SWAP.
+% Message: routing pays for missing wires with SWAPs; a better starting layout avoids some of them, and
+% choosing layout and SWAPs well for a whole circuit is the hard (NP-hard) part that SABRE-style
+% heuristics solve approximately.
+\begin{tikzpicture}[primer,
+    every node/.append style={execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    qb/.style={circle,draw=pdark,line width=.7pt,fill=white,minimum size=7mm,inner sep=0pt,
+               font=\sffamily\small},
+    hw/.style={line width=1.2pt,draw=pgray},
+    phys/.style={font=\sffamily\scriptsize,text=pgray!80!black,inner sep=1pt},
+    want/.style={line width=.9pt,draw=porange!85!black,dashed,-{Latex[length=2mm]}},
+    title/.style={p tag,align=left,anchor=base west,font=\sffamily\bfseries\footnotesize},
+    txt/.style={p note,align=left,anchor=north west},
+  ]
+  % ---- 1. the device and the wanted gate ----
+  \foreach \q/\name in {0/a,1/b,2/c,3/d} {
+    \node[qb] (A\q) at (\q*9mm,0) {$\name$};
+    \node[phys,below=1mm of A\q] {P\q};
+  }
+  \foreach \p/\q in {0/1,1/2,2/3} { \draw[hw] (A\p) -- (A\q); }
+  \draw[want] (A0.north) to[out=50,in=130]
+    node[midway,above,font=\sffamily\scriptsize,text=porange!85!black,fill=white,inner sep=1.5pt]
+    {CX wanted, no wire} (A3.north);
+  \node[title] at (-3.5mm,15mm) {1.\ a gate with no wire};
+  \node[txt,text width=38mm] at (-3.5mm,-9mm)
+    {Only neighbours on the line can share a CX, and the circuit asks for one between $a$ and $d$.};
+
+  % ---- 2. routing: SWAP d next to a ----
+  \node[anchor=north west,inner sep=0pt] (circ) at (46mm,7mm) {%
+    \begin{quantikz}[row sep={7mm,between origins},column sep=4mm,font=\sffamily\small]
+      \lstick{P0: $a$} & \qw     & \qw     & \ctrl{1} & \rstick{$a$} \\
+      \lstick{P1: $b$} & \qw     & \swap{1} & \targ{}  & \rstick{$d$} \\
+      \lstick{P2: $c$} & \swap{1} & \targX{} & \qw     & \rstick{$b$} \\
+      \lstick{P3: $d$} & \targX{} & \qw     & \qw     & \rstick{$c$}
+    \end{quantikz}};
+  \node[title] at (44mm,15mm) {2.\ routing adds SWAPs};
+  \node[txt,text width=48mm] at ([yshift=-2mm]circ.south west -| 44mm,0)
+    {Two SWAPs walk $d$ next to $a$. Each SWAP costs 3 CX, so 1 CX became 7, and the qubits end up
+     in a new order that every later gate must follow.};
+
+  % ---- 3. or start from a better layout ----
+  \foreach \q/\name in {0/a,1/d,2/b,3/c} {
+    \node[qb] (C\q) at (106mm+\q*9mm,0) {$\name$};
+    \node[phys,below=1mm of C\q] {P\q};
+  }
+  \foreach \p/\q in {0/1,1/2,2/3} { \draw[hw] (C\p) -- (C\q); }
+  \draw[line width=.9pt,draw=pgreen!70!black,-{Latex[length=2mm]}] (C0.north) to[out=60,in=120]
+    node[midway,above,font=\sffamily\scriptsize,text=pgreen!60!black,fill=white,inner sep=1.5pt]
+    {CX, no SWAP} (C1.north);
+  \node[title] at (102.5mm,15mm) {3.\ or a better layout};
+  \node[txt,text width=40mm] at (102.5mm,-9mm)
+    {Placing $d$ beside $a$ from the start costs nothing. With many gates no single layout suits them
+     all, so layout and routing are chosen together, by heuristics such as SABRE.};
+\end{tikzpicture}

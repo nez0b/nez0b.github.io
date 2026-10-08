@@ -1,0 +1,54 @@
+% Data: measured 2026-10-08 with Qiskit 2.5.2, pytket 2.18.1 and PyZX 0.10.6, all on my reproduction of the
+% organisers' 18-qubit baseline circuit (it scores the same 5329/3502), no coupling map, every output checked
+% correct. Depth and CX from the challenge scorer: baseline 5329/3502; one-qubit runs merged only 5263/3502;
+% Qiskit transpile level 3 5021/3355; tket FullPeepholeOptimise then Qiskit 5004/3347; PyZX teleport_reduce
+% (no basic_optimization; the variant with it failed the check) 5269/3502; PyZX full_reduce + extract
+% 8950/8576 (both PyZX rows with one-qubit runs merged afterwards). T-count is PyZX's count of non-Clifford
+% phase gates: 4247, 3725, 3589, 3482, 3167, 3160; it shifts by up to 7 with how one-qubit gates are written.
+% Message: "better" depends on the cost. Gate-level tools that win depth and CX barely move the T-count, and
+% the tool that cuts the T-count most more than doubles the CX count.
+\begin{tikzpicture}[primer,
+    every node/.append style={execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+    tool/.style={font=\sffamily\scriptsize,text=pdark,anchor=east,align=right,text width=38mm,inner sep=1pt},
+    val/.style={font=\sffamily\scriptsize,text=pdark,anchor=east,inner sep=1pt},
+    head/.style={p tag,anchor=base west,font=\sffamily\bfseries\footnotesize},
+    sub/.style={font=\sffamily\scriptsize\itshape,text=pgray!80!black,anchor=base west,inner sep=1pt},
+    ref/.style={line width=.5pt,draw=pgray,densely dashed},
+  ]
+  \def\barmax{24}   % mm for the largest value in a panel
+  \def\rowh{6.5}    % mm between rows
+  % rows: label / depth / CX / T / family (0 reference, 1 Qiskit-tket, 2 PyZX)
+  \foreach \k/\name/\d/\c/\t/\fam in {
+      0/{baseline circuit}/5329/3502/4247/0,
+      1/{merge one-qubit gates only}/5263/3502/3725/0,
+      2/{Qiskit, level 3}/5021/3355/3589/1,
+      3/{tket, then Qiskit}/5004/3347/3482/1,
+      4/{PyZX teleport\_reduce}/5269/3502/3167/2,
+      5/{PyZX full\_reduce}/8950/8576/3160/2} {
+    \pgfmathsetmacro{\y}{-\k*\rowh}
+    \node[tool] at (0,\y mm) {\name};
+    \ifcase\fam
+      \def\barstyle{draw=pgray!80!black,fill=pgray!18}\or
+      \def\barstyle{draw=pblue!70!black,fill=psky!18}\or
+      \def\barstyle{draw=porange!85!black,fill=porange!18}\fi
+    % values sit in a column right of the longest bar, so no reference line can cross them;
+    % the best value of each panel is bold; T-counts within 7 of the best tie (PyZX's count shifts that much)
+    \foreach \v/\vmax/\x/\best/\tol in {\d/8950/2/5004/0,\c/8576/40/3347/0,\t/4247/78/3160/7} {
+      \pgfmathsetmacro{\len}{\v/\vmax*\barmax}
+      \expandafter\draw\expandafter[\barstyle,line width=.6pt]
+        (\x mm,\y mm-1.8mm) rectangle ++(\len mm,3.6mm);
+      \node[val] at (\x mm+\barmax mm+10mm,\y mm) {\ifnum\v<\numexpr\best+\tol+1\relax\bfseries\fi\v};
+    }
+  }
+  % ---- baseline reference lines and panel heads ----
+  \foreach \x/\vmax/\base/\label/\note in {2/8950/5329/depth/{layers of gates},
+                                           40/8576/3502/{CX count}/{two-qubit gates},
+                                           78/4247/4247/{T-count}/{PyZX's count of T-type gates}} {
+    \pgfmathsetmacro{\bx}{\x+\base/\vmax*\barmax}
+    \draw[ref] (\bx mm,3.2mm) -- (\bx mm,-5*\rowh mm-3.2mm);
+    \node[head] at (\x mm,9mm) {\label};
+    \node[sub] at (\x mm,5mm) {\note};
+  }
+  \node[font=\sffamily\scriptsize\itshape,text=pgray!80!black,anchor=north west,align=left,text width=130mm,inner sep=1pt]
+    at (2mm,-5*\rowh mm-5mm) {lower is better; the dashed line marks the baseline; the best value in each panel is bold\\T-counts within 7 tie: PyZX's count shifts that much with how gates are written};
+\end{tikzpicture}

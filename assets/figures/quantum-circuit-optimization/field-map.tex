@@ -1,0 +1,38 @@
+% Data: none measured; the branches are the sections of Part 1, and every tool or method named in a leaf is
+% one the post cites (Qiskit, tket, BQSKit, PyZX, Quartz/QUESO/GUOQ, SABRE/LightSABRE, VOQC, QCEC, gridsynth,
+% lattice surgery, magic-state factories and cultivation).
+% Message: a quantum compiler is several kinds of work, not one optimiser: translate, synthesise, improve,
+% map to hardware, check, and (for fault-tolerant machines) a different back end with a different cost.
+\begingroup\hyphenpenalty=10000\exhyphenpenalty=10000   % ragged leaves, no word splits
+\begin{forest}
+  p tree,
+  for tree={font=\sffamily\scriptsize},
+  where level=0{fill=pdark!12,draw=pdark,font=\sffamily\bfseries\small,
+    node options={text width=24mm,align=center}}{},
+  where level=1{font=\sffamily\bfseries\scriptsize,
+    node options={text width=34mm}}{},
+  where level=2{fill=white,node options={text width=64mm}}{},
+[{quantum\\compiler}
+  [{translate\\into native gates},fill=pgray!18,draw=pgray!80!black
+    [{Rewrite every gate in the few gates the hardware runs, for example CX or CZ plus one-qubit rotations}]
+  ]
+  [{synthesise\\from a specification},fill=pgreen!12,draw=pgreen!70!black
+    [{Build a circuit from a matrix, a state, a Boolean function or a list of Pauli rotations}]
+    [{Exact for small blocks (any two-qubit gate needs at most three CX), numerical or approximate beyond}]
+  ]
+  [{improve\\a circuit},fill=psky!14,draw=pblue!70!black
+    [{Local rewrites: cancel, commute, merge rotations}]
+    [{Re-synthesise blocks; rewrite in another language (ZX-diagrams); search with rewrite rules (Quartz, QUESO, GUOQ)}]
+  ]
+  [{map to\\the hardware},fill=ppurple!14,draw=ppurple!85!black
+    [{Place the program's qubits, insert SWAPs where a pair cannot interact (SABRE, LightSABRE), schedule, avoid noisy qubits}]
+  ]
+  [{check\\the result},fill=porange!14,draw=porange!85!black
+    [{Equivalence checking (QCEC), verified passes (VOQC), shared benchmark suites}]
+  ]
+  [{fault-tolerant\\back end},fill=pred!10,draw=pred!80!black
+    [{Clifford+T rotation synthesis (gridsynth), T-count reduction, lattice-surgery layout, magic-state factories and cultivation}]
+  ]
+]
+\end{forest}
+\endgroup
